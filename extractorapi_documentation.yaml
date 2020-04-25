@@ -2,29 +2,22 @@ openapi: 3.0.1
 info:
   title: Extractor API
   description: |
-    ### Overview
+    # Overview
 
     Extractor API extracts clean text from articles, as well as details like title, author, images, and more.
     “Clean” text refers to text without boilerplate - advertising copy, subscription solicitations (“Subscribe to our newsletter!”), comments in the comment section, and so on. In other words, the article part of an article page.
 
     The API is specifically designed for long-form content, rather than short-form content like product descriptions, image captions, etc.
 
-    #### Authentication
+    ### Authentication
 
     To authenticate your request, simply include the `apikey` parameter with your account's API key in your GET request.
 
-    If you don’t have an API key, you can head over to the [Pricing](/extractor-api-pricing/) page to sign up for a free account or start a trial for a paid account. Afterwards you’ll be redirected to your Dashboard, which will display your API key.
-    Once you’re logged in, your API key will also be embedded in all documentation examples.
+    If you don’t have an API key, you can head over to the [Pricing](/extractor-api-pricing/) page to sign up for a free account or start a 14-day trial for a paid account. Afterwards you’ll be redirected to your [Dashboard](/extractor-api-dashboard/), which will display your API key.
 
-    #### Jobs
+    ### Rate Limits
 
-    Every time you make a request through the API or using our visual online tool, your extraction task is assigned a job. Jobs help you easily identify, explore, and download content you’ve already extracted.
-
-    If you send your API request without a job_name parameter, it will automatically be saved under a job titled after the day’s date, in MM_DD_YYYY format (ex. 01_01_2020). If you specify a job_name in the request, the extracted data will be linked to both the generic, date-based job, and the job_name you assigned it to.
-
-    #### Rate Limits
-
-    Depending on your plan, you’ll have a different rate limit. If you go over your limit, you'll receive a **401 response code**.
+    Depending on your plan, you’ll have a different rate limit. If you go over your limit, you'll receive a **403 response code**.
 
     * Free Plan: 1/second
     * Hobby Plan: 5/second
@@ -105,8 +98,6 @@ paths:
                     ]                    
                     date_published: 2030-01-01T08:40:51.620Z
                     text: Clean article text.
-                    raw_text: Advertisement. Clean article text. Subscribe now. # Returned if "raw_text" set in the fields parameter
-                    html: <!DOCTYPE html><html lang='en'><head><title>Title</title></head><body>Text</body></html> # Returned if "html" set in the fields parameter
         400:
           description: Error
           content:
