@@ -3,35 +3,19 @@ info:
   title: Extractor API
   description: |
     Extractor API extracts clean text from articles, in addition to details like title, author, images, and more.
-
-    Extractor API is a **RESTful API**, returns **JSON-encoded** responses, uses standard **HTTP response codes**, and is **authenticated** through a query parameter.
-
-    # Overview
-
+    ## Overview
     Extractor API extracts clean text from articles, in addition to details like title, author, images, and more.
-
     “Clean” text refers to text without boilerplate, like advertising copy, subscription solicitations (“Subscribe to our newsletter!”), comments in the comment section, and so on. In other words, the article part of an article page.
-
     Extractor API is specifically designed for this type of long-form content, rather than short-form text like product descriptions, image captions, and so on.
-
-    ## Authentication
-
+    ### Authentication
     To authenticate your request, simply include the apikey parameter in your GET request.
-
     If you don’t have an API key, you can head over to the Pricing page to sign up for a free account or start a trial for a paid account. Afterwards you’ll be redirected to your Dashboard, which will display your API key.
-
     Once you’re logged in, your API key will also be embedded in all documentation examples.
-
-    ## Jobs
-
+    ### Jobs
     Every time you make a request through the API or using our visual online tool, your extraction task is assigned a job. Jobs help you easily identify, explore, and download content you’ve already extracted.
-
     If you send your API request without a job_name parameter, it will automatically be saved under a job titled after the day’s date, in MM_DD_YYYY format (ex. 01_01_2020). If you specify a job_name in the request, the extracted data will be linked to both the generic, date-based job, and the job_name you assigned it to.
-
-    ## Rate Limits
-
+    ### Rate Limits
     Depending on your plan, you’ll have a different rate limit. If you go over your limit, you'll receive a **401 response code**.
-
     * Free Plan: 1/second
     * Hobby Plan: 5/second
     * Professional Plan: 10/second
@@ -62,8 +46,7 @@ paths:
         - name: fields
           in: query
           description: |
-            An optional string of comma-seperated fields you want to display in the response. To include raw text, include `raw_text`. Similarly, for the HTML output, include `html`. Both `raw_text` and `html` are optional and not included in standard responses by default.
-            The **fields** parameter will always return the url, status and text, so these aren't required.
+            An optional string of comma-seperated fields you want to display in the response. To include raw text, include `raw_text`. Similarly, for the HTML output, include `html`. Both `raw_text` and `html` are optional and not included in standard responses by default. The **fields** parameter will always return the url, status and text, so there's not need to ever include them.
           required: false
           schema:
             type: string
