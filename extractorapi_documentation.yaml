@@ -27,6 +27,7 @@ servers:
 paths:
   /extractor:
     get:
+      summary: Extract Text from URL
       description: Given a target URL, returns extracted text and other details.
       parameters:
         - name: apikey
