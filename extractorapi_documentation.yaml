@@ -25,8 +25,7 @@ info:
     * Professional Plan: 10/second
     * Business Plan: 15/second
   version: 0.1.9
-  x-logo:
-    url: "https://extractorapi-static.s3.amazonaws.com/extractor_api_logo.png"
+
 servers:
   - url: https://extractorapi.com/api
     description: Extractor API base URL
