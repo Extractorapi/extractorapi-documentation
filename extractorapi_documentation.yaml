@@ -4,16 +4,16 @@ info:
   description: |
     ### Overview
 
-    Extractor API extracts clean text from articles, in addition to details like title, author, images, and more.
-    “Clean” text refers to text without boilerplate, like advertising copy, subscription solicitations (“Subscribe to our newsletter!”), comments in the comment section, and so on. In other words, the article part of an article page.
+    Extractor API extracts clean text from articles, as well as details like title, author, images, and more.
+    “Clean” text refers to text without boilerplate - advertising copy, subscription solicitations (“Subscribe to our newsletter!”), comments in the comment section, and so on. In other words, the article part of an article page.
 
-    Extractor API is specifically designed for this type of long-form content, rather than short-form text like product descriptions, image captions, and so on.
+    The API is specifically designed for long-form content, rather than short-form content like product descriptions, image captions, etc.
 
     #### Authentication
 
-    To authenticate your request, simply include the apikey parameter in your GET request.
+    To authenticate your request, simply include the `apikey` parameter with your account's API key in your GET request.
 
-    If you don’t have an API key, you can head over to the Pricing page to sign up for a free account or start a trial for a paid account. Afterwards you’ll be redirected to your Dashboard, which will display your API key.
+    If you don’t have an API key, you can head over to the [Pricing](/extractor-api-pricing/) page to sign up for a free account or start a trial for a paid account. Afterwards you’ll be redirected to your Dashboard, which will display your API key.
     Once you’re logged in, your API key will also be embedded in all documentation examples.
 
     #### Jobs
@@ -37,7 +37,7 @@ servers:
 paths:
   /extractor:
     get:
-      summary: Extract Text from URL
+      summary: Extractor
       description: Given a target URL, returns extracted text and other details.
       parameters:
         - name: apikey
@@ -57,14 +57,14 @@ paths:
         - name: fields
           in: query
           description: |
-            An optional string of comma-seperated fields you want to display in the response. To include raw text, include `raw_text`. Similarly, for the HTML output, include `html`. Both `raw_text` and `html` are optional and not included in standard responses by default. The **fields** parameter will always return the url, status and text, so there's not need to ever include them.
+            An optional string of comma-seperated fields you want to display in the response. The **fields** parameter will always return the url, status and text, so there's no need to include them. For raw text, include `raw_text`. Similarly, for the HTML output, include `html`. Both `raw_text` and `html` are optional and not included in standard responses.
           required: false
           schema:
             type: string
-            example: author,html
+            example: author,html # Response will display url, status, text, author and html
       responses:
         200:
-          description: A successful response containing the extracted text and other details.
+          description: Successful Response
           content:
             application/json:
               schema:
@@ -105,4 +105,22 @@ paths:
                     ]                    
                     date_published: 2030-01-01T08:40:51.620Z
                     text: Clean article text.
-                    html: <!DOCTYPE html><html lang='en'><head><title>Title</title></head><body>Text</body></html>
+                    raw_text: Advertisement. Clean article text. Subscribe now. # Returned if "raw_text" set in the fields parameter
+                    html: <!DOCTYPE html><html lang='en'><head><title>Title</title></head><body>Text</body></html> # Returned if "html" set in the fields parameter
+        400:
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                  status:
+                    type: string
+                  details:
+                    type: string
+                example:
+                    url: http://example.com
+                    status: ERROR
+                    details: There was an error connecting to the URL
