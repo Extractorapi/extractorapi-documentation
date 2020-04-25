@@ -1,15 +1,78 @@
 openapi: 3.0.1
 info:
-  title: Sample API
-  description: API description in Markdown.
-  version: 1.0.0
+  title: Extractor API
+  description: Extractor API extracts clean text from articles, in addition to details like title, author, images, and more.
+  version: 0.1.9
 servers:
-  - url: 'https://api.example.com'
+  - url: https://extractorapi.com/api
+    description: Extractor API base URL
 paths:
-  /users:
+  /extractor:
     get:
-      summary: Returns a list of users.
-      description: Optional extended description in Markdown.
+      description: Given a target URL, returns extracted text and other details.
+      parameters:
+        - name: apikey
+          in: query
+          description: Your account's API key.
+          required: true
+          schema:
+            type: string
+            example: 90c972dba7fz32c3degp478bd328764ab200123
+        - name: url
+          in: query
+          description: The target URL you want to extract text from.
+          required: true
+          schema:
+            type: string
+            example: example.com
+        - name: fields
+          in: query
+          description: An optional string of comma-seperated response fields. To include raw text, include "raw_text". Similarly, for the HTML output, include "html". Both "raw_text" and "html" are not included in the response by default. The fields parameter will always return the url, status and text, so these aren't required.
+          required: false
+          schema:
+            type: string
+            example: domain,title,author,date_published,images,videos,html
       responses:
-        '200':
-          description: OK
+        200:
+          description: A successful response containing the extracted text and other details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                  status:
+                    type: string
+                  domain:
+                    type: string
+                  title:
+                    type: string
+                  author:
+                    type: array
+                    items:
+                      type: string
+                  videos:
+                    type: array
+                    items:
+                      type: string
+                  date_published:
+                    type: string
+                  text:
+                    type: string
+                example:
+                    url: http://example.com
+                    status: COMPLETE
+                    domain: example.com
+                    title: Example Article Title
+                    images: [
+                      example.com/image_1.png,
+                      example.com/image_2.png
+                    ]
+                    videos: [
+                      "https://www.youtube.com/watch?v=3XAMPL3",
+                      "https://vimeo.com/42424242"
+                    ]                    
+                    date_published: 2030-01-01T08:40:51.620Z
+                    text: Clean article text.
+                    html: <!DOCTYPE html><html lang='en'><head><title>Title</title></head><body>Text</body></html>
