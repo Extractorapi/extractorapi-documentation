@@ -2,8 +2,7 @@ openapi: 3.0.1
 info:
   title: Extractor API
   description: |
-    
-    ## [Return Home](/)
+    [Return Home](/)
 
     # Overview
 
