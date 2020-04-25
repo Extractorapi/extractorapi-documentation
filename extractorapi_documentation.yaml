@@ -5,6 +5,7 @@ info:
     # Overview
 
     Extractor API extracts clean text from articles, as well as details like title, author, images, and more.
+
     “Clean” text refers to text without boilerplate - advertising copy, subscription solicitations (“Subscribe to our newsletter!”), comments in the comment section, and so on. In other words, the article part of an article page.
 
     The API is specifically designed for long-form content, rather than short-form content like product descriptions, image captions, etc.
@@ -24,6 +25,8 @@ info:
     * Professional Plan: 10/second
     * Business Plan: 15/second
   version: 0.1.9
+x-logo:
+  url: https://extractorapi-static.s3.amazonaws.com/extractor_api_logo.png
 servers:
   - url: https://extractorapi.com/api
     description: Extractor API base URL
