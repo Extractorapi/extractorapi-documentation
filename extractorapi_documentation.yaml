@@ -4,20 +4,17 @@ info:
   description: |
     [Return Home](/)
 
-    # Overview
-
+    ## Overview
     Extractor API extracts clean text from articles, as well as details like title, author, images, and more.
 
     “Clean” text refers to text without boilerplate - advertising copy, subscription solicitations (“Subscribe to our newsletter!”), comments in the comment section, and so on. In other words, the article part of an article page.
 
     The API is specifically designed for long-form content, rather than short-form content like product descriptions, image captions, etc.
-
     ### Authentication
 
     To authenticate your request, simply include the `apikey` parameter with your account's API key in your GET request.
 
     If you don’t have an API key, you can head over to the [Pricing](/extractor-api-pricing/) page to sign up for a free account or start a 14-day trial for a paid account. Afterwards you’ll be redirected to your [Dashboard](/extractor-api-dashboard/), which will display your API key.
-
     ### Rate Limits
 
     Depending on your plan, you’ll have a different rate limit. If you go over your limit, you'll receive a **403 response code**.
