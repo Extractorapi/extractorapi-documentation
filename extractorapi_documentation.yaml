@@ -12,13 +12,13 @@ info:
 
     The API is specifically designed for long-form content, rather than short-form content like product descriptions, image captions, etc.
 
-    ### Authentication
+    ## Authentication
 
     To authenticate your request, simply include the `apikey` parameter with your account's API key in your GET request.
 
     If you don’t have an API key, you can head over to the [Pricing](/extractor-api-pricing/) page to sign up for a free account or start a 14-day trial for a paid account. Afterwards you’ll be redirected to your [Dashboard](/extractor-api-dashboard/), which will display your API key.
 
-    ### Rate Limits
+    ## Rate Limits
 
     Depending on your plan, you’ll have a different rate limit. If you go over your limit, you'll receive a **403 response code**.
 
