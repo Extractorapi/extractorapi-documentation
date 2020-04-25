@@ -2,6 +2,8 @@ openapi: 3.0.1
 info:
   title: Extractor API
   description: |
+    ## [Return Home](/)
+
     # Overview
 
     Extractor API extracts clean text from articles, as well as details like title, author, images, and more.
@@ -25,7 +27,6 @@ info:
     * Professional Plan: 10/second
     * Business Plan: 15/second
   version: 0.1.9
-
 servers:
   - url: https://extractorapi.com/api
     description: Extractor API base URL
