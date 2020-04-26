@@ -75,12 +75,16 @@ paths:
                     type: array
                     items:
                       type: string
+                  date_published:
+                    type: string
+                  images:
+                    type: array
+                    items:
+                      type: string
                   videos:
                     type: array
                     items:
                       type: string
-                  date_published:
-                    type: string
                   text:
                     type: string
                 example:
@@ -88,6 +92,11 @@ paths:
                     status: COMPLETE
                     domain: example.com
                     title: Example Article Title
+                    author: [
+                      Author Candidate I,
+                      Author Candidate II
+                    ]
+                    date_published: 2030-01-01T08:40:51.620Z
                     images: [
                       example.com/image_1.png,
                       example.com/image_2.png
@@ -95,8 +104,7 @@ paths:
                     videos: [
                       "https://www.youtube.com/watch?v=3XAMPL3",
                       "https://vimeo.com/42424242"
-                    ]                    
-                    date_published: 2030-01-01T08:40:51.620Z
+                    ]
                     text: Clean article text.
         400:
           description: Error
@@ -112,6 +120,6 @@ paths:
                   details:
                     type: string
                 example:
-                    url: http://example.com
+                    url: http://error-example.com
                     status: ERROR
                     details: There was an error connecting to the URL
