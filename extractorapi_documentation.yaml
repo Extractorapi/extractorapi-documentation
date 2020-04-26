@@ -19,10 +19,9 @@ info:
 
     Depending on your plan, you’ll have a different rate limit. If you go over your limit, you'll receive a **429 response code**.
 
-    * Free Plan: 1/second
-    * Hobby Plan: 5/second
-    * Professional Plan: 10/second
-    * Business Plan: 15/second
+    ## Base URL
+    All API requests will have this base URL.
+    `https://extractorapi.com/api`
   version: 0.1.9
 servers:
   - url: https://extractorapi.com/api
@@ -42,7 +41,7 @@ paths:
             example: 90c972dba7fz32c3degp478bd328764ab200123
         - name: url
           in: query
-          description: The target URL you want to extract text from.
+          description: The target URL you want to extract text from. Adding protocols is optional (ex. "http://") - these will be added automatically if they are not provided.
           required: true
           schema:
             type: string
@@ -50,7 +49,15 @@ paths:
         - name: fields
           in: query
           description: |
-            An optional string of comma-seperated fields you want to display in the response. The **fields** parameter will always return the url, status and text, so there's no need to include them. For raw text, include `raw_text`. Similarly, for the HTML output, include `html`. Both `raw_text` and `html` are optional and not included in standard responses.
+            An optional string of comma-seperated fields you want to display in the response. The **fields** parameter will always return the url, status and text, so there's no need to include them.
+
+            Allowed fields:
+
+            * `html`: ex
+            * `raw_text`: example
+
+
+            For raw text, include `raw_text`. Similarly, for the HTML output, include `html`. Both `raw_text` and `html` are optional and not included in standard responses.
           required: false
           schema:
             type: string
