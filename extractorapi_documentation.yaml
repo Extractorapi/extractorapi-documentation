@@ -20,11 +20,11 @@ info:
     Depending on your plan, you’ll have a different rate limit. If you go over your limit, you'll receive a **429 response code**.
 
     ## Base URL
-    All API requests will have this base URL.
-    `https://extractorapi.com/api`
-  version: 0.1.9
+    All API requests will need to include this base URL:
+    `https://extractorapi.com/api/v1`
+  version: 1.0.0
 servers:
-  - url: https://extractorapi.com/api
+  - url: https://extractorapi.com/api/v1
     description: Extractor API base URL
 paths:
   /extractor:
@@ -49,15 +49,19 @@ paths:
         - name: fields
           in: query
           description: |
-            An optional string of comma-seperated fields you want to display in the response. The **fields** parameter will always return the url, status and text, so there's no need to include them.
+            An optional string of comma-seperated fields you want to display in the response. The **fields** parameter will always return the url, status and text, so there's no need to include them. If you don't include **fields**, your response will include all fields except for `html` and `raw_text`.
 
             Allowed fields:
 
-            * `html`: ex
-            * `raw_text`: example
+            * `domain`: The domain in the target URL
+            * `title`: The title of the URL page
+            * `author`: The author candidates
+            * `date_published`: Date the content was published
+            * `images`: List of images on the page
+            * `videos`: List of videos on the page
+            * `html`: The HTML of the response
+            * `raw_text`: Page text, including boilerplate
 
-
-            For raw text, include `raw_text`. Similarly, for the HTML output, include `html`. Both `raw_text` and `html` are optional and not included in standard responses.
           required: false
           schema:
             type: string
