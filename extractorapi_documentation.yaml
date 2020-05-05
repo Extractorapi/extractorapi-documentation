@@ -1,4 +1,3 @@
-# TODO: Add requestBody markup for both Jobs endpoints + 3 rest
 openapi: 3.0.1
 info:
   title: Extractor API
@@ -174,18 +173,18 @@ paths:
                     type: string
                     description: The extracted, boilerplate-free text
                 example:
-                    url: http://example.com
+                    url: "http://example.com"
                     status: COMPLETE
-                    domain: example.com
+                    domain: "example.com"
                     title: Example Article Title
                     author: [
                       Author Candidate I,
                       Author Candidate II
                     ]
-                    date_published: 2030-01-01T08:40:51.620Z
+                    date_published: "2030-01-01T08:40:51.620Z"
                     images: [
-                      example.com/image_1.png,
-                      example.com/image_2.png
+                      "example.com/image_1.png",
+                      "example.com/image_2.png"
                     ]
                     videos: [
                       "https://www.youtube.com/watch?v=3XAMPL3",
@@ -381,8 +380,29 @@ paths:
           source: |
             http POST https://extractorapi.com/api/v1/jobs \
                       Authorization:"Bearer YOUR_API_KEY" \
-                      job_name=myJob4 \
+                      job_name=myJob \
                       url_list:='["example.com/article1", "example.com/acrticle2"]'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                job_name:
+                  type: string
+                  description: The name of your job. Note that this has to be a job name you haven't used before or you'll get a **400** response.
+                url_list:
+                  type: array
+                  description: List of URLs you'd like to extract text from.
+                  items:
+                    type: string
+                    description: URL string, with or without the protocol (ex. "http://")
+              example:
+                job_name: "myJob"
+                url_list: [
+                  "example.com/article1",
+                  "example.com/article2"
+                ]
       responses:
         200:
           description: OK
@@ -418,93 +438,114 @@ paths:
   /jobs/{id}:
     get:
       summary: Job Status
-      description: Retrieve a specific job and its completion status.
+      description: Retrieve a specific job and its completion status, using the job's ID.
       security:
         - Bearer: []
       x-code-samples:
-        - lang: HTML
-          label: cURL
-          source: |
-            curl -H "Authorization: Bearer {YOUR_API_KEY}" \
-                 -X GET "https://extractorapi.com/api/v1/jobs"
-        - lang: HTML
-          label: HTTPie
-          source: |
-            http GET https://extractorapi.com/api/v1/jobs \
-                     Authorization:"Bearer {YOUR_API_KEY}"
         - lang: Python
           source: |
             import requests
 
-            endpoint = "https://extractorapi.com/api/v1/jobs"
-            params = {
-              apikey: "API_KEY"
-              url: "example.com"
+            endpoint = "https://extractorapi.com/api/v1/jobs/1"
+            api_key = "YOUR_API_KEY"
+            headers = {
+              "Authorization": f"Bearer {api_key}"
             }
 
-            r = requests.get(endpoint, params=params)
+            r = requests.get(endpoint, headers=headers)
             print(r.json())
         - lang: JavaScript
           source: |
-            let apiKey = "YOUR_API_KEY";
-            let endpoint = "https://extractorapi.com/api/v1/jobs/1/urls";
+            var Http = new XMLHttpRequest();
+            var apiKey = "YOUR_API_KEY"
+            var endpoint = "https://extractorapi.com/api/v1/jobs/1";
 
-            let myHeaders = new Headers({
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${apiKey}`
-            });
+            Http.open("GET", endpoint);
+            Http.setRequestHeader(
+               "Content-Type", "application/json"
+            );
+            Http.setRequestHeader(
+               "Authorization", `Bearer ${apiKey}`
+            );
+            Http.send();
 
-            let myRequest = new Request({
-              method: "GET",
-              headers: myHeaders,
-            });
-
-            fetch(myRequest)
-              .then( (myResponse) => {
-                 return myResponse.json()
-            })
-            .then((myJson) => {
-              console.log(myJson);
-              // Do something with your extracted text.
-            });
+            Http.onreadystatechange = (e) => {
+              console.log(Http.responseText)
+            }
+        - lang: HTML
+          label: HTTPie
+          source: |
+            http GET https://extractorapi.com/api/v1/jobs/1 \
+                     Authorization:"Bearer YOUR_API_KEY"
       responses:
         200:
-          description: Successful Response
+          description: OK
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  url:
+                  id:
+                    type: integer
+                    description: The job's ID
+                  job_name:
                     type: string
+                    description: The name of the job
+                  job_status:
+                    type: object
+                    description: A dictionary containing your progress information about the job
+                    properties:
+                      errors:
+                        type: integer
+                        description: The number of URLs that encountered an error during the extraction process
+                      percent_complete:
+                        type: integer
+                        description: The percent of URLs processed, from 0 to 100
+                      urls_processed:
+                        type: integer
+                        description: The number of URLs processed (not that processed could mean both a successful extraction and an error)
+                  process_date:
+                    type: string
+                    description: The date and time the job started processing
+                  url_count:
+                    type: integer
+                    description: The number of URLs in the job
+                  urls:
+                    type: array
+                    description: A list of the job's URLs
+                    items:
+                      type: string
+                      description: URL string, with or without the protocol (ex. "http://")
                 example:
-                    url: http://example.com
+                  id: 1
+                  job_name: my_job
+                  job_status: {
+                    errors: 0,
+                    percent_complete: 100,
+                    urls_processed: 2
+                  }
+                  process_date: "2030-01-02T08:40:51.620Z"
+                  url_count: 2
+                  urls: [
+                    "http://example.com/article1",
+                    "http://example.com/article2"
+                  ]
         401:
           $ref: "#/components/responses/UnauthorizedError"
 
   /jobs/{id}/urls:
     get:
       summary: Job URLs
-      description: A paginated list of URLs, included extracted text and details.
+      description: A job's paginated list of URLs, including the extracted text and details. By default, only 10 URL objects are displayed per page.
       security:
         - Bearer: []
       x-code-samples:
-        - lang: HTML
-          label: cURL
-          source: |
-            curl -H "Authorization: Bearer {YOUR_API_KEY}" \
-                 -X GET "https://extractorapi.com/api/v1/jobs/1/urls"
-        - lang: HTML
-          label: HTTPie
-          source: |
-            http GET https://extractorapi.com/api/v1/jobs/1/urls \
-                     Authorization:"Bearer {YOUR_API_KEY}"
         - lang: Python
           source: |
             import requests
 
-            api_key = "YOUR_API_KEY"
             endpoint = "https://extractorapi.com/api/v1/jobs/1/urls"
+            api_key = "YOUR_API_KEY"
             headers = {
               "Authorization": f"Bearer {api_key}"
             }
@@ -513,27 +554,27 @@ paths:
             print(r.json())
         - lang: JavaScript
           source: |
-            let apiKey = "YOUR_API_KEY";
-            let endpoint = "https://extractorapi.com/api/v1/jobs/1/urls";
+            var Http = new XMLHttpRequest();
+            var apiKey = "YOUR_API_KEY"
+            var endpoint = "https://extractorapi.com/api/v1/jobs/1/urls";
 
-            let myHeaders = new Headers({
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${apiKey}`
-            });
+            Http.open("GET", endpoint);
+            Http.setRequestHeader(
+               "Content-Type", "application/json"
+            );
+            Http.setRequestHeader(
+               "Authorization", `Bearer ${apiKey}`
+            );
+            Http.send();
 
-            let myRequest = new Request({
-              method: "GET",
-              headers: myHeaders,
-            });
-
-            fetch(myRequest)
-              .then( (myResponse) => {
-                 return myResponse.json()
-            })
-            .then((myJson) => {
-              console.log(myJson);
-              // Do something with your extracted text.
-            });
+            Http.onreadystatechange = (e) => {
+              console.log(Http.responseText)
+            }
+        - lang: HTML
+          label: HTTPie
+          source: |
+            http GET https://extractorapi.com/api/v1/jobs/1/urls \
+                     Authorization:"Bearer YOUR_API_KEY"
       responses:
         200:
           description: OK
@@ -542,36 +583,123 @@ paths:
               schema:
                 type: object
                 properties:
-                  url:
+                  count:
+                    type: integer
+                    description: The number of results
+                  next:
                     type: string
+                    description: The next URL in the paginated results, if any
+                  previous:
+                    type: string
+                    description: The previous URL in the paginated results, if any
+                  results:
+                    type: array
+                    description: A list of the URLs in your job
+                    items:
+                      type: object
+                      description: A dictionary containing a URL's details
+                      properties:
+                        url:
+                          type: string
+                          description: The URL string
+                        id:
+                          type: integer
+                          description: The URL ID
+                        status:
+                          type: string
+                          description: The status of the request, either `COMPLETE` or `ERROR`
+                        domain:
+                          type: string
+                          description: The domain of the URL
+                        title:
+                          type: string
+                          description: The title of the URL page
+                        author:
+                          type: array
+                          description: The author candidates
+                          items:
+                            type: string
+                        date_published:
+                          type: string
+                          description: Date the content was published
+                        images:
+                          type: array
+                          description: List of images on the page
+                          items:
+                            type: string
+                        videos:
+                          type: array
+                          description: List of videos on the page
+                          items:
+                            type: string
+                        text:
+                          type: string
+                          description: The extracted, boilerplate-free text
                 example:
-                    url: http://example.com
+                  count: 2
+                  next: https://extractorapi.com/api/v1/jobs/1/urls?page=2
+                  previous: null
+                  results: [
+                    {
+                      url: "http://example.com/article1",
+                      id: 5,
+                      status: COMPLETE,
+                      domain: "example.com",
+                      title: Example Article Title 1,
+                      author: [
+                        Author Candidate I,
+                        Author Candidate II
+                      ],
+                      date_published: "2030-01-01T08:40:51.620Z",
+                      images: [
+                        "example.com/image.png",
+                      ],
+                      videos: [
+                        "https://www.youtube.com/watch?v=1337HX0R",
+                        "https://vimeo.com/12345678"
+                      ],
+                      text: Clean article text.
+                    },
+                    {
+                      url: "http://example.com/article2",
+                      id: 6,
+                      status: COMPLETE,
+                      domain: example.com,
+                      title: Example Article Title 2,
+                      author: [
+                        Author Candidate I,
+                        Author Candidate II,
+                        Author Candidate III
+                      ],
+                      date_published: "2030-01-02T08:40:51.620Z",
+                      images: [
+                        "example.com/image_1.png",
+                        "example.com/image_2.png"
+                      ],
+                      videos: [
+                        "https://www.youtube.com/watch?v=3XAMPL3",
+                        "https://vimeo.com/42424242"
+                      ],
+                      text: Clean article text.
+                    }
+                  ]
         401:
           $ref: "#/components/responses/UnauthorizedError"
 
   /jobs/{id}/urls/{id}:
     get:
       summary: URL Details
-      description: Retrieve a single URL and its extracted text and details from a particular job.
+      description: |
+        Retrieve a single URL and its extracted text and details from a particular job. This endpoint include two additional fields you won't get in the **Job URLs** endpoint: `html` and `raw_text`.
       security:
         - Bearer: []
       x-code-samples:
-        - lang: HTML
-          label: cURL
-          source: |
-            curl -H "Authorization: Bearer {YOUR_API_KEY}" \
-                 -X GET "https://extractorapi.com/api/v1/jobs/1/urls/1"
-        - lang: HTML
-          label: HTTPie
-          source: |
-            http GET https://extractorapi.com/api/v1/jobs/1/urls/1 \
-                     Authorization:"Bearer {YOUR_API_KEY}"
         - lang: Python
           source: |
             import requests
 
+            endpoint = "https://extractorapi.com/api/v1/jobs/1/urls/6"
             api_key = "YOUR_API_KEY"
-            endpoint = "https://extractorapi.com/api/v1/jobs/1/urls"
             headers = {
               "Authorization": f"Bearer {api_key}"
             }
@@ -580,25 +708,27 @@ paths:
             print(r.json())
         - lang: JavaScript
           source: |
-            let url = "https://extractorapi.com/api/v1/jobs/1/urls/1";
-            let myHeaders = new Headers({
-              "Content-Type": "application/json",
-              "Authorization": "Bearer {YOUR_API_KEY}"
-            });
+            var Http = new XMLHttpRequest();
+            var apiKey = "YOUR_API_KEY"
+            var endpoint = "https://extractorapi.com/api/v1/jobs/1/urls/6";
 
-            let myRequest = new Request({
-              method: "GET",
-              headers: myHeaders,
-            });
+            Http.open("GET", endpoint);
+            Http.setRequestHeader(
+               "Content-Type", "application/json"
+            );
+            Http.setRequestHeader(
+               "Authorization", `Bearer ${apiKey}`
+            );
+            Http.send();
 
-            fetch(myRequest)
-              .then( (myResponse) => {
-                 return myResponse.json()
-            })
-            .then((myJson) => {
-              console.log(myJson);
-              // Do something with your extracted text.
-            });
+            Http.onreadystatechange = (e) => {
+              console.log(Http.responseText)
+            }
+        - lang: HTML
+          label: HTTPie
+          source: |
+            http GET https://extractorapi.com/api/v1/jobs/1/urls/6 \
+                     Authorization:"Bearer YOUR_API_KEY"
       responses:
         200:
           description: OK
@@ -609,7 +739,67 @@ paths:
                 properties:
                   url:
                     type: string
+                    description: The URL string
+                  id:
+                    type: integer
+                    description: The URL ID
+                  status:
+                    type: string
+                    description: The status of the request, either `COMPLETE` or `ERROR`
+                  domain:
+                    type: string
+                    description: The domain of the URL
+                  title:
+                    type: string
+                    description: The title of the URL page
+                  author:
+                    type: array
+                    description: The author candidates
+                    items:
+                      type: string
+                  date_published:
+                    type: string
+                    description: Date the content was published
+                  images:
+                    type: array
+                    description: List of images on the page
+                    items:
+                      type: string
+                  videos:
+                    type: array
+                    description: List of videos on the page
+                    items:
+                      type: string
+                  text:
+                    type: string
+                    description: The extracted, boilerplate-free text
+                  html:
+                    type: string
+                    description: The full HTML of the URL page
+                  raw_text:
+                    type: string
+                    description: The full text of the URL page, including boilerplate
                 example:
-                    url: http://example.com
+                  url: "http://example.com"
+                  id: 6
+                  status: COMPLETE
+                  domain: "example.com"
+                  title: Example Article Title
+                  author: [
+                    Author Candidate I,
+                    Author Candidate II
+                  ]
+                  date_published: "2030-01-01T08:40:51.620Z"
+                  images: [
+                    "example.com/image_1.png",
+                    "example.com/image_2.png"
+                  ]
+                  videos: [
+                    "https://www.youtube.com/watch?v=3XAMPL3",
+                    "https://vimeo.com/42424242"
+                  ]
+                  text: Clean article text.
+                  html: "<!DOCTYPE html><html lang='en'>...</html>"
+                  raw_text: "ADVERTISEMENT. Rest of article text. Sign Up!"
         401:
           $ref: "#/components/responses/UnauthorizedError"
