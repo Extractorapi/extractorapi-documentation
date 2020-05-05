@@ -346,6 +346,7 @@ paths:
               "url_list": [
                   "example.com/article1",
                   "example.com/article2"
+              ]
             }
 
             r = requests.post(endpoint, headers=headers, data=data)
