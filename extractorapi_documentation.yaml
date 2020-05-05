@@ -1,3 +1,4 @@
+# TODO: Add requestBody markup for both Jobs endpoints + 3 rest
 openapi: 3.0.1
 info:
   title: Extractor API
@@ -5,32 +6,94 @@ info:
     [Return Home](/)
 
     # Overview
+
     Extractor API extracts clean text from articles, as well as details like title, author, images, and more.
 
     “Clean” text refers to text without boilerplate - advertising copy, subscription solicitations (“Subscribe to our newsletter!”), comments in the comment section, and so on. In other words, the article part of an article page.
 
     The API is specifically designed for long-form content, rather than short-form content like product descriptions, image captions, etc.
-    ## Authentication
 
-    To authenticate your request, simply include the `apikey` parameter with your account's API key in your GET request.
+    ## API Key
+
+    To authenticate the **Extractor** endpoint, simply include the `apikey` parameter in your request URL. For all **Jobs** endpoints, you will need to include the `Authorization` header followed by the `Bearer` keyword and your API key. The documentation includes examples for both forms of authentication.
 
     If you don’t have an API key, you can head over to the [Pricing](/extractor-api-pricing/) page to sign up for a free account or start a 14-day trial for a paid account. Afterwards you’ll be redirected to your [Dashboard](/extractor-api-dashboard/), which will display your API key.
+
     ## Rate Limits
 
-    Depending on your plan, you’ll have a different rate limit. If you go over your limit, you'll receive a **429 response code**.
+    Depending on your plan, you’ll have a different [rate limit](/extractor-api-pricing/). If you go over your limit, you'll receive a **429 response code**.
 
     ## Base URL
+
     All API requests will need to include this base URL:
     `https://extractorapi.com/api/v1`
+
   version: 1.0.0
+
 servers:
   - url: https://extractorapi.com/api/v1
     description: Extractor API base URL
+
+components:
+  securitySchemes:
+    APIKeyParam:
+      type: apiKey
+      name: apikey
+      in: query
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: "Bearer YOUR_API_KEY"
+  responses:
+    UnauthorizedError:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail:
+                type: string
+                description: Description of the authorization error
+            example:
+                detail: Invalid token.
+
 paths:
   /extractor:
     get:
+      security:
+        - APIKeyParam: []
       summary: Extractor
-      description: Given a target URL, returns extracted text and other details.
+      description: Given a target URL, this endpoint returns extracted text and other details. This is the only endpoint that is authenticated via an `apikey` parameter in the URL, and is meant for quick testing, or for getting sanitized HTML. We suggest you use the **Jobs** endpoints below in your text extraction workflow. Protocols ("http://" or "https://") for the `url` are optional, as the API will automatically add "http://" if it doesn't detect one.
+      x-code-samples:
+        - lang: Python
+          source: |
+            import requests
+
+            endpoint = "https://extractorapi.com/api/v1/extractor"
+            params = {
+              "apikey": "YOUR_API_KEY",
+              "url": "example.com"
+            }
+
+            r = requests.get(endpoint, params=params)
+            print(r.json())
+        - lang: JavaScript
+          source: |
+            var Http = new XMLHttpRequest();
+            var endpoint = "https://extractorapi.com/api/v1/extractor";
+            var params = "apikey=YOUR_API_KEY&url=example.com"
+
+            Http.open("GET", endpoint+"?"+params);
+            Http.send();
+
+            Http.onreadystatechange = (e) => {
+              console.log(Http.responseText)
+            }
+        - lang: HTML
+          label: HTTPie
+          source: |
+            http GET "https://extractorapi.com/api/v1/extractor?apikey=YOUR_API_KEY&url=example.com"
       parameters:
         - name: apikey
           in: query
@@ -49,26 +112,29 @@ paths:
         - name: fields
           in: query
           description: |
-            An optional string of comma-seperated fields you want to display in the response. The **fields** parameter will always return the url, status and text, so there's no need to include them. If you don't include **fields**, your response will include all fields except for `html` and `raw_text`.
+            An optional string of comma-seperated fields you want to display in the response. The **fields** parameter will always return the `url`, `status` and `text`, so there's no need to include them. If you don't include **fields**, your response will include all fields except for `html`, `raw_text` and `clean_html`.
 
             Allowed fields:
 
-            * `domain`: The domain in the target URL
+            * `domain`: The domain of your target URL
             * `title`: The title of the URL page
             * `author`: The author candidates
             * `date_published`: Date the content was published
             * `images`: List of images on the page
             * `videos`: List of videos on the page
-            * `html`: The HTML of the response
-            * `raw_text`: Page text, including boilerplate
+            * `html`: The HTML of the response _(optional)_
+            * `raw_text`: Page text, including boilerplate _(optional)_
+            * `clean_html`: Sanitized HTML, constructed from extracted text _(optional)_
 
           required: false
           schema:
             type: string
-            example: author,html # Response will display url, status, text, author and html
+            example:
+              - images
+              - clean_html
       responses:
         200:
-          description: Successful Response
+          description: OK
           content:
             application/json:
               schema:
@@ -76,28 +142,37 @@ paths:
                 properties:
                   url:
                     type: string
+                    description: Your target URL
                   status:
                     type: string
+                    description: The status of the request, in this case `COMPLETE`
                   domain:
                     type: string
+                    description: The domain of your target URL
                   title:
                     type: string
+                    description: The title of the URL page
                   author:
                     type: array
+                    description: The author candidates
                     items:
                       type: string
                   date_published:
                     type: string
+                    description: Date the content was published
                   images:
                     type: array
+                    description: List of images on the page
                     items:
                       type: string
                   videos:
                     type: array
+                    description: List of videos on the page
                     items:
                       type: string
                   text:
                     type: string
+                    description: The extracted, boilerplate-free text
                 example:
                     url: http://example.com
                     status: COMPLETE
@@ -118,7 +193,7 @@ paths:
                     ]
                     text: Clean article text.
         400:
-          description: Error
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -126,11 +201,415 @@ paths:
                 properties:
                   url:
                     type: string
+                    description: Your target URL
                   status:
                     type: string
+                    description: The status of the request, in this case `ERROR`
                   details:
                     type: string
+                    description: The reason for the Bad Request error
                 example:
-                    url: http://error-example.com
+                    url: http://example.com
                     status: ERROR
                     details: There was an error connecting to the URL
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: Description of the authorization error
+                example:
+                    detail: Please check that you entered your API key correctly
+
+  /jobs:
+    get:
+      summary: List Jobs
+      description: List all your current jobs (includes both your pending and complete jobs). Results are paginated, with a maximum of 50 jobs per page.
+      security:
+        - Bearer: []
+      x-code-samples:
+        - lang: Python
+          source: |
+            import requests
+
+            endpoint = "https://extractorapi.com/api/v1/jobs"
+            api_key = "YOUR_API_KEY"
+            headers = {
+              "Authorization": f"Bearer {api_key}"
+            }
+
+            r = requests.get(endpoint, headers=headers)
+            print(r.json())
+        - lang: JavaScript
+          source: |
+            var Http = new XMLHttpRequest();
+            var apiKey = "YOUR_API_KEY"
+            var endpoint = "https://extractorapi.com/api/v1/jobs";
+
+            Http.open("GET", endpoint);
+            Http.setRequestHeader(
+               "Content-Type", "application/json"
+            );
+            Http.setRequestHeader(
+               "Authorization", `Bearer ${apiKey}`
+            );
+            Http.send();
+
+            Http.onreadystatechange = (e) => {
+              console.log(Http.responseText)
+            }
+        - lang: HTML
+          label: HTTPie
+          source: |
+            http GET https://extractorapi.com/api/v1/jobs \
+                     Authorization:"Bearer YOUR_API_KEY"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    description: The number of results
+                  next:
+                    type: string
+                    description: The next URL in the paginated results, if any
+                  previous:
+                    type: string
+                    description: The previous URL in the paginated results, if any
+                  results:
+                    type: array
+                    description: A list of your jobs
+                    items:
+                      type: object
+                      description: A dictionary containing a job's details
+                      properties:
+                        id:
+                          type: integer
+                          description: Your job's ID - you'll need this if you want to check its progress
+                        job_name:
+                          type: string
+                          description: The name you gave your job when you created it
+                        process_date:
+                          type: string
+                          description: The date and time the job started processing
+                        url_count:
+                          type: integer
+                          description: The number of URLs in the job
+                example:
+                    count: 2
+                    next: https://extractorapi.com/api/v1/jobs?page=2
+                    previous: null
+                    results: [
+                      {
+                        id: 1,
+                        job_name: myJob1,
+                        process_date: "2030-01-02T08:40:51.620Z",
+                        url_count: 5
+                      },
+                      {
+                        id: 2,
+                        job_name: myJob2,
+                        process_date: "2030-01-03T08:40:51.620Z",
+                        url_count: 10
+                      }
+                    ]
+
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+
+    post:
+      summary: Create Job
+      description: |
+        Create a job and begin extracting text from the provided list of URLs. Jobs will persist on the server, meaning they don't block your workflow. You can periodically check the status of your job via the **Job Status** endpoint, or even head to your [Jobs page](/jobs/) to view the status of the job and download results in .json or .csv formats.
+      security:
+        - Bearer: []
+      x-code-samples:
+        - lang: Python
+          source: |
+            import requests
+
+            api_key = "YOUR_API_KEY"
+            endpoint = "https://extractorapi.com/api/v1/jobs"
+
+            headers = {
+                "Authorization": f"Bearer {api_key}"
+            }
+            data = {
+              "job_name": "my_job",
+              "url_list": [
+                  "example.com/article1",
+                  "example.com/article2"
+            }
+
+            r = requests.post(endpoint, headers=headers, data=data)
+            print(r.json())
+        - lang: JavaScript
+          source: |
+            var Http = new XMLHttpRequest();
+            var apiKey = "YOUR_API_KEY"
+            var endpoint = "https://extractorapi.com/api/v1/jobs";
+            var data = {
+              "job_name": "myJob",
+              "url_list": [
+                "example.com/article1",
+                "example.com/article2"
+              ]
+            }
+
+            Htp.open("POST", endpoint);
+            Http.setRequestHeader(
+               "Content-Type", "application/json"
+            );
+            Http.setRequestHeader(
+               "Authorization", `Bearer ${apiKey}`
+            );
+            Http.send(JSON.stringify(data));
+
+            Http.onreadystatechange = (e) => {
+              console.log(Http.responseText)
+            }
+        - lang: HTML
+          label: HTTPie
+          source: |
+            http POST https://extractorapi.com/api/v1/jobs \
+                      Authorization:"Bearer YOUR_API_KEY" \
+                      job_name=myJob4 \
+                      url_list:='["example.com/article1", "example.com/acrticle2"]'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Your new job's ID - use this to check your job's status
+                  job_name:
+                    type: string
+                    description: The name you gave your job
+                example:
+                    id: 2
+                    job_name: my_job
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: The reason for the Bad Request error
+                example:
+                    detail: You already have a job named myJob!
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /jobs/{id}:
+    get:
+      summary: Job Status
+      description: Retrieve a specific job and its completion status.
+      security:
+        - Bearer: []
+      x-code-samples:
+        - lang: HTML
+          label: cURL
+          source: |
+            curl -H "Authorization: Bearer {YOUR_API_KEY}" \
+                 -X GET "https://extractorapi.com/api/v1/jobs"
+        - lang: HTML
+          label: HTTPie
+          source: |
+            http GET https://extractorapi.com/api/v1/jobs \
+                     Authorization:"Bearer {YOUR_API_KEY}"
+        - lang: Python
+          source: |
+            import requests
+
+            endpoint = "https://extractorapi.com/api/v1/jobs"
+            params = {
+              apikey: "API_KEY"
+              url: "example.com"
+            }
+
+            r = requests.get(endpoint, params=params)
+            print(r.json())
+        - lang: JavaScript
+          source: |
+            let apiKey = "YOUR_API_KEY";
+            let endpoint = "https://extractorapi.com/api/v1/jobs/1/urls";
+
+            let myHeaders = new Headers({
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${apiKey}`
+            });
+
+            let myRequest = new Request({
+              method: "GET",
+              headers: myHeaders,
+            });
+
+            fetch(myRequest)
+              .then( (myResponse) => {
+                 return myResponse.json()
+            })
+            .then((myJson) => {
+              console.log(myJson);
+              // Do something with your extracted text.
+            });
+      responses:
+        200:
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                example:
+                    url: http://example.com
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /jobs/{id}/urls:
+    get:
+      summary: Job URLs
+      description: A paginated list of URLs, included extracted text and details.
+      security:
+        - Bearer: []
+      x-code-samples:
+        - lang: HTML
+          label: cURL
+          source: |
+            curl -H "Authorization: Bearer {YOUR_API_KEY}" \
+                 -X GET "https://extractorapi.com/api/v1/jobs/1/urls"
+        - lang: HTML
+          label: HTTPie
+          source: |
+            http GET https://extractorapi.com/api/v1/jobs/1/urls \
+                     Authorization:"Bearer {YOUR_API_KEY}"
+        - lang: Python
+          source: |
+            import requests
+
+            api_key = "YOUR_API_KEY"
+            endpoint = "https://extractorapi.com/api/v1/jobs/1/urls"
+            headers = {
+              "Authorization": f"Bearer {api_key}"
+            }
+
+            r = requests.get(endpoint, headers=headers)
+            print(r.json())
+        - lang: JavaScript
+          source: |
+            let apiKey = "YOUR_API_KEY";
+            let endpoint = "https://extractorapi.com/api/v1/jobs/1/urls";
+
+            let myHeaders = new Headers({
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${apiKey}`
+            });
+
+            let myRequest = new Request({
+              method: "GET",
+              headers: myHeaders,
+            });
+
+            fetch(myRequest)
+              .then( (myResponse) => {
+                 return myResponse.json()
+            })
+            .then((myJson) => {
+              console.log(myJson);
+              // Do something with your extracted text.
+            });
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                example:
+                    url: http://example.com
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+
+  /jobs/{id}/urls/{id}:
+    get:
+      summary: URL Details
+      description: Retrieve a single URL and its extracted text and details from a particular job.
+      security:
+        - Bearer: []
+      x-code-samples:
+        - lang: HTML
+          label: cURL
+          source: |
+            curl -H "Authorization: Bearer {YOUR_API_KEY}" \
+                 -X GET "https://extractorapi.com/api/v1/jobs/1/urls/1"
+        - lang: HTML
+          label: HTTPie
+          source: |
+            http GET https://extractorapi.com/api/v1/jobs/1/urls/1 \
+                     Authorization:"Bearer {YOUR_API_KEY}"
+        - lang: Python
+          source: |
+            import requests
+
+            api_key = "YOUR_API_KEY"
+            endpoint = "https://extractorapi.com/api/v1/jobs/1/urls"
+            headers = {
+              "Authorization": f"Bearer {api_key}"
+            }
+
+            r = requests.get(endpoint, headers=headers)
+            print(r.json())
+        - lang: JavaScript
+          source: |
+            let url = "https://extractorapi.com/api/v1/jobs/1/urls/1";
+            let myHeaders = new Headers({
+              "Content-Type": "application/json",
+              "Authorization": "Bearer {YOUR_API_KEY}"
+            });
+
+            let myRequest = new Request({
+              method: "GET",
+              headers: myHeaders,
+            });
+
+            fetch(myRequest)
+              .then( (myResponse) => {
+                 return myResponse.json()
+            })
+            .then((myJson) => {
+              console.log(myJson);
+              // Do something with your extracted text.
+            });
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                example:
+                    url: http://example.com
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
