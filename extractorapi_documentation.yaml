@@ -24,7 +24,7 @@ info:
 
     ## Base URL
 
-    All API requests will need to include this base URL:
+    All API requests will need to include the below base URL. Also note that none of the endpoints here will need a forward slash at the end.
     `https://extractorapi.com/api/v1`
 
   version: 1.0.1
@@ -266,6 +266,15 @@ paths:
           source: |
             http GET https://extractorapi.com/api/v1/jobs \
                      Authorization:"Bearer YOUR_API_KEY"
+      parameters:
+        - name: job_name__contains
+          in: query
+          description: |
+            Filter the results by the job name. `job_name__contains` looks for an exact match while `job_name__icontains` is case agnostic. The filter parameter should be prepended with `?`. For example, the full URL would look like this: `https://extractorapi.com/api/v1/jobs?job_name__contains=my_job`.
+          required: false
+          schema:
+            type: string
+            example: my_job
       responses:
         200:
           description: OK
@@ -576,6 +585,23 @@ paths:
           source: |
             http GET https://extractorapi.com/api/v1/jobs/1/urls \
                      Authorization:"Bearer YOUR_API_KEY"
+      parameters:
+        - name: title__contains
+          in: query
+          description: |
+            Filter the results by a keyword in the URL page title. `title__contains` looks for an exact match while `title__icontains` is case agnostic. The filter parameter should be prepended with `?`. For example, the full URL would look like this: `https://extractorapi.com/api/v1/jobs/1/urls?title__contains=Facebook`.
+          required: false
+          schema:
+            type: string
+            example: facebook
+        - name: text__contains
+          in: query
+          description: |
+            Filter the results by a keyword in the cleaned text of the URL. `text__contains` looks for an exact match while `text__icontains` is case agnostic. The filter parameter should be prepended with `?`. For example, the full URL would look like this: `https://extractorapi.com/api/v1/jobs/1/urls?text__icontains=acquisition`.
+          required: false
+          schema:
+            type: string
+            example: acquisition
       responses:
         200:
           description: OK
