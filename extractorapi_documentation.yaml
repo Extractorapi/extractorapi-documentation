@@ -27,7 +27,7 @@ info:
     All API requests will need to include this base URL:
     `https://extractorapi.com/api/v1`
 
-  version: 1.0.0
+  version: 1.0.1
 
 servers:
   - url: https://extractorapi.com/api/v1
