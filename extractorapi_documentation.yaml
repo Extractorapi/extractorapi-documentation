@@ -336,7 +336,7 @@ paths:
     post:
       summary: Create Job
       description: |
-        Create a job and begin extracting text from the provided list of URLs. Jobs will persist on the server, meaning they don't block your workflow. You can periodically check the status of your job via the **Job Status** endpoint, or even head to your [Jobs page](/jobs/) to view the status of the job and download results in .json or .csv formats. **Note that you can add a maximum of 100 URLs to a job at a time - any more, and the list will be cut off at the 100 URLs mark**.
+        Create a job and begin extracting text from the provided list of URLs. Jobs will persist on the server, meaning they don't block your workflow. You can periodically check the status of your job via the **Job Status** endpoint, or even head to your [Jobs page](/jobs/) to view the status of the job and download results in .json or .csv formats. **Note that you can add a maximum of 1,000 URLs to a job at a time - any more, and the list will be cut off at the 100 URLs mark**.
       security:
         - Bearer: []
       x-code-samples:
