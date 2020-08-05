@@ -108,6 +108,20 @@ paths:
           schema:
             type: string
             example: example.com
+        - name: js
+          in: query
+          description: Enable JavaScript rendering. Uses 5 requests instead of the standard 1 request. Available only in paid plans.
+          required: false
+          schema:
+            type: string
+            example: true
+        - name: wait
+          in: query
+          description: Used alongside the **js** parameter. Waits that many seconds before retrieving text content. Available only in paid plans.
+          required: false
+          schema:
+            type: int
+            example: 3
         - name: fields
           in: query
           description: |
