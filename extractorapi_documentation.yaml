@@ -27,7 +27,7 @@ info:
     All API requests will need to include the below base URL. Also note that none of the endpoints here will need a forward slash at the end.
     `https://extractorapi.com/api/v1`
 
-  version: 1.0.1
+  version: 1.0.2
 
 servers:
   - url: https://extractorapi.com/api/v1
