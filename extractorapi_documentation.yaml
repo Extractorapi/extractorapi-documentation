@@ -6,17 +6,17 @@ info:
 
     # Overview
 
-    Extractor API extracts clean text from articles, as well as details like title, author, images, and more.
+    Extractor API extracts clean text from articles, as well as details like title, author, images and more.
 
-    “Clean” text refers to text without boilerplate - advertising copy, subscription solicitations (“Subscribe to our newsletter!”), comments in the comment section, and so on. In other words, the article part of an article page.
+    “Clean” text refers to text without boilerplate - advertising copy, subscription solicitations (“Subscribe to our newsletter!”), comments in the comment section and so on. In other words, the article part of an article page.
 
     The API is specifically designed for long-form content, rather than short-form content like product descriptions, image captions, etc.
 
     ## API Key
 
-    To authenticate the **Extractor** endpoint, simply include the `apikey` parameter in your request URL. For all **Jobs** endpoints, you will need to include the `Authorization` header followed by the `Bearer` keyword and your API key. The documentation includes examples for both forms of authentication.
+    To authenticate the **Extractor** endpoint, simply include the `apikey` parameter in your request URL. For all **Job** endpoints, you will need to include the `Authorization` header followed by the `Bearer` keyword and your API key. The documentation includes examples for both forms of authentication.
 
-    If you don’t have an API key, you can head over to the [Pricing](/extractor-api-pricing/) page to sign up for a free account or start a 14-day trial for a paid account. Afterwards you’ll be redirected to your [Dashboard](/extractor-api-dashboard/), which will display your API key.
+    If you don’t have an API key, you can head over to the [Pricing](/extractor-api-pricing/) page to sign up for a Free Plan or start a 14-day trial for any of the paid plans. Afterwards you’ll be redirected to your [Dashboard](/extractor-api-dashboard/), which will display your API key.
 
     ## Rate Limits
 
@@ -24,10 +24,11 @@ info:
 
     ## Base URL
 
-    All API requests will need to include the below base URL. Also note that none of the endpoints here will need a forward slash at the end.
+    All API requests will need to include the following base URL. Also note that none of the endpoints here will need a forward slash at the end.
+
     `https://extractorapi.com/api/v1`
 
-  version: 1.0.2
+  version: 1.0.3
 
 servers:
   - url: https://extractorapi.com/api/v1
@@ -63,7 +64,7 @@ paths:
       security:
         - APIKeyParam: []
       summary: Extractor
-      description: Given a target URL, this endpoint returns extracted text and other details. This is the only endpoint that is authenticated via an `apikey` parameter in the URL, and is meant for quick testing, or for getting sanitized HTML. We suggest you use the **Jobs** endpoints below in your text extraction workflow. Protocols ("http://" or "https://") for the `url` are optional, as the API will automatically add "http://" if it doesn't detect one.
+      description: Given a target URL, this endpoint returns extracted text and other useful data. This is the only endpoint that is authenticated via an `apikey` parameter in the URL, making it ideal for quick tests and simple requests. We suggest you use the **Job** endpoints below if you're creating a text extraction workflow. Protocols ("http://" or "https://") for the `url` parameter are optional, as the API will automatically add "http://" if it doesn't detect one. Also note that sometimes (but not always), parameters within your target URL will give you issues, so it's best to remove them.
       x-code-samples:
         - lang: Python
           source: |
@@ -103,7 +104,7 @@ paths:
             example: 90c972dba7fz32c3degp478bd328764ab200123
         - name: url
           in: query
-          description: The target URL you want to extract text from. Adding protocols is optional (ex. "http://") - these will be added automatically if they are not provided.
+          description: The target URL you want to extract text from. Adding protocols is optional (ex. "http://") - these will be added automatically if they are not provided. Try to avoid query parameters in your target URL as these may interfere with your actual parameters.
           required: true
           schema:
             type: string
@@ -122,6 +123,20 @@ paths:
           schema:
             type: int
             example: 3
+        - name: translate_from
+          in: query
+          description: Indicates the `text` output language you want to translate from. If you want to translate an extracted English article into French, `translate_from` would be `translate_from=en`. See the list of [language codes here](/getting-started/#translate/). Available only in paid plans.
+          required: false
+          schema:
+            type: string
+            example: en
+        - name: translate_from
+          in: query
+          description: Indicates the language you want to translate your `text` output to. If you want to translate an extracted English article into French, `translate_to` would be `translate_to=fr`. See the list of [language codes here](/getting-started/#translate/). Available only in paid plans.
+          required: false
+          schema:
+            type: string
+            example: fr
         - name: fields
           in: query
           description: |
@@ -136,15 +151,15 @@ paths:
             * `images`: List of images on the page
             * `videos`: List of videos on the page
             * `html`: The HTML of the response _(optional)_
-            * `raw_text`: Page text, including boilerplate _(optional)_
+            * `raw_text`: Page text, including boilerplate
+            * `translated_text`: Translation of `text` output, requires `translate_from` and `translate_to` parameters _(optional)_
             * `clean_html`: Sanitized HTML, constructed from extracted text _(optional)_
 
           required: false
           schema:
             type: string
             example:
-              - images
-              - clean_html
+              - images,translated_text
       responses:
         200:
           description: OK
