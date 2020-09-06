@@ -125,14 +125,14 @@ paths:
             example: 3
         - name: translate_from
           in: query
-          description: Indicates the `text` output language you want to translate from. If you want to translate an extracted English article into French, `translate_from` would be `translate_from=en`. See the list of [language codes here](/getting-started/#translate). Available only in paid plans.
+          description: Indicates the `text` output language you want to translate from. If you want to translate an extracted English article into French, `translate_from` would be `translate_from=en`. See the list of [language codes here](/getting-started#translate/). Available only in paid plans.
           required: false
           schema:
             type: string
             example: en
         - name: translate_to
           in: query
-          description: Indicates the language you want to translate your `text` output to. If you want to translate an extracted English article into French, `translate_to` would be `translate_to=fr`. See the list of [language codes here](/getting-started/#translate). Available only in paid plans.
+          description: Indicates the language you want to translate your `text` output to. If you want to translate an extracted English article into French, `translate_to` would be `translate_to=fr`. See the list of [language codes here](/getting-started#translate/). Available only in paid plans.
           required: false
           schema:
             type: string
