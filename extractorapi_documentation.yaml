@@ -140,9 +140,9 @@ paths:
         - name: fields
           in: query
           description: |
-            An optional string of comma-seperated fields you want to display in the response. The **fields** parameter will always return the `url`, `status` and `text`, so there's no need to include them. If you don't include **fields**, your response will include all fields except for `html`, `raw_text` and `clean_html`.
+            An optional string of comma-seperated fields you want to display in the response. The **fields** parameter will always return the `url`, `status` and `text`, so there's no need to include them. If you don't include **fields**, your response will include all fields except for `html`, `raw_text`, `translated_text` and `clean_html`.
 
-            Allowed fields:
+            Allowed comma-seperated `fields`:
 
             * `domain`: The domain of your target URL
             * `title`: The title of the URL page
