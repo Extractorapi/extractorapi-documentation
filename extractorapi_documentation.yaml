@@ -64,7 +64,7 @@ paths:
       security:
         - APIKeyParam: []
       summary: Extractor
-      description: Given a target URL, this endpoint returns extracted text and other useful data. This is the only endpoint that is authenticated via an `apikey` parameter in the URL, making it ideal for quick tests and simple requests. We suggest you use the **Job** endpoints below if you're creating a text extraction workflow. Protocols ("http://" or "https://") for the `url` parameter are optional, as the API will automatically add "http://" if it doesn't detect one. Also note that sometimes (but not always), parameters within your target URL will give you issues, so it's best to remove them.
+      description: Given a target URL, this endpoint returns extracted text and other useful data. Protocols ("http://" or "https://") for the `url` parameter are optional, as the API will automatically add "http://" if it doesn't detect one. Also note that sometimes (but not always), parameters within your target URL will give you issues, so it's best to remove them.
       x-code-samples:
         - lang: Python
           source: |
@@ -252,6 +252,93 @@ paths:
                     description: Description of the authorization error
                 example:
                     detail: Please check that you entered your API key correctly
+
+  /search:
+    get:
+      security:
+        - APIKeyParam: []
+      summary: News Search
+      description: Given a search term, this endpoint returns a list of up to 100 relevant news items. You can optionally add a language-country code to narrow down results.
+      x-code-samples:
+        - lang: Python
+          source: |
+            import requests
+
+            endpoint = "https://extractorapi.com/api/v1/search"
+            params = {
+              "apikey": "YOUR_API_KEY",
+              "search_term": "example"
+            }
+
+            r = requests.get(endpoint, params=params)
+            print(r.json())
+        - lang: JavaScript
+          source: |
+            var Http = new XMLHttpRequest();
+            var endpoint = "https://extractorapi.com/api/v1/search";
+            var params = "apikey=YOUR_API_KEY&search_term=example"
+
+            Http.open("GET", endpoint+"?"+params);
+            Http.send();
+
+            Http.onreadystatechange = (e) => {
+              console.log(Http.responseText)
+            }
+        - lang: HTML
+          label: HTTPie
+          source: |
+            http GET "https://extractorapi.com/api/v1/search?apikey=YOUR_API_KEY&search_term=example"
+      parameters:
+        - name: apikey
+          in: query
+          description: Your account's API key.
+          required: true
+          schema:
+            type: string
+            example: 90c972dba7fz32c3degp478bd328764ab200123
+        - name: search_term
+          in: query
+          description: The term you would like to search for. While more than one term (seperated by whitespaces) may work, it's advised to use a single term for best results.
+          required: true
+          schema:
+            type: string
+            example: example
+        - name: location
+          in: query
+          description: A language-country code to narrow down your results. You can find the [list of usable language-country codes here](/getting-started#location).
+          required: false
+          schema:
+            type: string
+            example: en-US
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  title:
+                    type: string
+                    description: The news article's title
+                  url:
+                    type: string
+                    description: The news article's URL
+                  summary:
+                    type: string
+                    description: A summary of the news article
+                  site_name:
+                    type: string
+                    description: The news site's name
+                  date_published:
+                    type: string
+                    description: The date the news article was published
+                example:
+                    title: Example Title
+                    url: "http://example.com"
+                    summary: "Example article summary."
+                    site_name: Example Site Name
+                    date_published: "2030-01-01T08:40:51.620Z"
 
   /jobs:
     get:
