@@ -28,7 +28,7 @@ info:
 
     `https://extractorapi.com/api/v1`
 
-  version: 1.0.3
+  version: 1.0.4
 
 servers:
   - url: https://extractorapi.com/api/v1
@@ -140,7 +140,7 @@ paths:
         - name: fields
           in: query
           description: |
-            An optional string of comma-seperated fields you want to display in the response. The **fields** parameter will always return the `url`, `status` and `text`, so there's no need to include them. If you don't include **fields**, your response will include all fields except for `html`, `raw_text`, `translated_text` and `clean_html`.
+            An optional string of comma-seperated fields you want to display in the response. The **fields** parameter will always return the `url`, `status` and `text`, so there's no need to include them. If you don't include **fields**, your response will include all fields except for `raw_text`, `translated_title`, `translated_text` and `clean_html`.
 
             Allowed comma-seperated `fields`:
 
@@ -150,10 +150,11 @@ paths:
             * `date_published`: Date the content was published
             * `images`: List of images on the page
             * `videos`: List of videos on the page
-            * `html`: The HTML of the response _(optional)_
+            * `html`: The HTML of the response
             * `raw_text`: Page text, including boilerplate
-            * `translated_text`: Translation of `text` output, requires `translate_from` and `translate_to` parameters _(optional)_
-            * `clean_html`: Sanitized HTML, constructed from extracted text _(optional)_
+            * `translated_title`: Translation of `title` output, requires `translate_from` and `translate_to` parameters
+            * `translated_text`: Translation of `text` output, requires `translate_from` and `translate_to` parameters
+            * `clean_html`: Sanitized HTML, constructed from extracted text
 
           required: false
           schema:
@@ -201,6 +202,9 @@ paths:
                   text:
                     type: string
                     description: The extracted, boilerplate-free text
+                  html:
+                    type: html
+                    description: The page's HTML
                 example:
                     url: "http://example.com"
                     status: COMPLETE
@@ -220,6 +224,7 @@ paths:
                       "https://vimeo.com/42424242"
                     ]
                     text: Clean article text.
+                    html: "<html><body>Clean article text.</body></html>"
         400:
           description: Bad Request
           content:
