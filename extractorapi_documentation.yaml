@@ -524,7 +524,7 @@ paths:
                   description: The name of your job. Note that this has to be a job name you haven't used before or you'll get a **400** response.
                 url_list:
                   type: array
-                  description: List of URLs you'd like to extract text from. **1,000 URLs max - any more, and the list will be cut off**.
+                  description: List of URLs you'd like to extract text from. **100 URLs max - any more, and the list will be cut off**.
                   maximum: 100
                   items:
                     type: string
