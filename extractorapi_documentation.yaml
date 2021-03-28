@@ -479,7 +479,7 @@ paths:
               ]
             }
 
-            r = requests.post(endpoint, headers=headers, data=data)
+            r = requests.post(endpoint, headers=headers, json=data)
             print(r.json())
         - lang: JavaScript
           source: |
@@ -494,7 +494,7 @@ paths:
               ]
             }
 
-            Htp.open("POST", endpoint);
+            Http.open("POST", endpoint);
             Http.setRequestHeader(
                "Content-Type", "application/json"
             );
@@ -525,7 +525,7 @@ paths:
                 url_list:
                   type: array
                   description: List of URLs you'd like to extract text from. **1,000 URLs max - any more, and the list will be cut off**.
-                  maximum: 1000
+                  maximum: 100
                   items:
                     type: string
                     description: URL string, with or without the protocol (ex. "http://")
