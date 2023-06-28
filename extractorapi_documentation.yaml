@@ -350,7 +350,8 @@ paths:
           params = {
             "apikey": "YOUR_API_KEY",
             "url": "en.wikipedia.org/wiki/Forbes_list_of_the_world%27s_highest-paid_athletes",
-            "index": 0
+            "index": 0,
+            "js": true
           }
 
           r = requests.get(endpoint, params=params)
@@ -359,7 +360,7 @@ paths:
         source: |
           var Http = new XMLHttpRequest();
           var endpoint = "https://extractorapi.com/api/v1/table-extractor";
-          var params = "apikey=YOUR_API_KEY&url=en.wikipedia.org/wiki/Forbes_list_of_the_world%27s_highest-paid_athletes&index=0"
+          var params = "apikey=YOUR_API_KEY&url=en.wikipedia.org/wiki/Forbes_list_of_the_world%27s_highest-paid_athletes&index=0&js=true"
 
           Http.open("GET", endpoint+"?"+params);
           Http.send();
@@ -370,7 +371,7 @@ paths:
       - lang: HTML
         label: HTTPie
         source: |
-          http GET "https://extractorapi.com/api/v1/table-extractor?apikey=YOUR_API_KEY&url=en.wikipedia.org/wiki/Forbes_list_of_the_world%27s_highest-paid_athletes&index=0"
+          http GET "https://extractorapi.com/api/v1/table-extractor?apikey=YOUR_API_KEY&url=en.wikipedia.org/wiki/Forbes_list_of_the_world%27s_highest-paid_athletes&index=0&js=true"
       parameters:
       - name: apikey
         in: query
@@ -393,6 +394,14 @@ paths:
         schema:
           type: integer
           example: 0
+      - name: js
+        in: query
+        description: Enable JavaScript rendering. Uses 5 requests instead of the standard 1 request. Available only in paid plans.
+        required: false
+        schema:
+          type: string
+          example: true
+
       responses:
         200:
           description: OK
