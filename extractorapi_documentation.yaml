@@ -370,7 +370,7 @@ paths:
       - lang: HTML
         label: HTTPie
         source: |
-          http GET "https://extractorapi.com/api/v1/table-extractor?apikey=YOUR_API_KEY&url=example.com"
+          http GET "https://extractorapi.com/api/v1/table-extractor?apikey=YOUR_API_KEY&url=example.com&index=0"
       parameters:
       - name: apikey
         in: query
@@ -401,53 +401,16 @@ paths:
               schema:
                 type: object
                 properties:
-                  url:
-                    type: string
-                    description: Your target URL
-                  status:
-                    type: string
-                    description: The status of the request, in this case `COMPLETE`
-                  domain:
-                    type: string
-                    description: The domain of your target URL
-                  title:
-                    type: string
-                    description: The title of the URL page
-                  author:
+                  data:
                     type: array
-                    description: The author candidates
+                    description: table content including header and body
                     items:
-                      type: string
-                  date_published:
-                    type: string
-                    description: Date the content was published
-                  images:
-                    type: array
-                    description: List of images on the page
-                    items:
-                      type: string
-                  videos:
-                    type: array
-                    description: List of videos on the page
-                    items:
-                      type: string
-                  text:
-                    type: string
-                    description: The extracted, boilerplate-free text
-                  html:
-                    type: html
-                    description: The page's HTML
+                      type: array
+                      description: Each row in the table. The first row would be the header of table
+                      items:
+                        type: string
                 example:
-                  url: "http://example.com"
-                  status: COMPLETE
-                  domain: "example.com"
-                  title: Example Article Title
-                  author: [Author Candidate I, Author Candidate II]
-                  date_published: "2030-01-01T08:40:51.620Z"
-                  images: ["example.com/image_1.png", "example.com/image_2.png"]
-                  videos: ["https://www.youtube.com/watch?v=3XAMPL3", "https://vimeo.com/42424242"]
-                  text: Clean article text.
-                  html: "<html><body>Clean article text.</body></html>"
+                  data: [["Rank", "Name", "Sport", "Country", "Total", "Salary/winnings", "Endorsements"], ["1", "Conor McGregor", "Mixed martial arts", "Republic of Ireland", "$180 million", "$22 million", "$158 million"], ["2", "Lionel Messi", "Association football", "Argentina", "$130 million", "$97 million", "$33 million"]]
         400:
           description: Bad Request
           content:
