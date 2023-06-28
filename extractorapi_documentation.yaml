@@ -344,6 +344,113 @@ paths:
                     summary: "Example article summary."
                     site_name: Example Site Name
                     date_published: "2030-01-01T08:40:51.620Z"
+/table-extractor:
+    get:
+      security:
+        - APIKeyParam: []
+      summary: HTML Table Extractor
+      description: Given a target URL, this endpoint returns extracted html table content in array format. Protocols ("http://" or "https://") for the `url` parameter are optional, as the API will automatically add "http://" if it doesn't detect one. Also note that sometimes (but not always), parameters within your target URL will give you issues, so it's best to remove them.
+      x-code-samples:
+        - lang: Python
+          source: |
+            import requests
+
+            endpoint = "https://extractorapi.com/api/v1/table-extractor"
+            params = {
+              "apikey": "YOUR_API_KEY",
+              "url": "example.com",
+              "index": 0
+            }
+
+            r = requests.get(endpoint, params=params)
+            print(r.json())
+        - lang: JavaScript
+          source: |
+            var Http = new XMLHttpRequest();
+            var endpoint = "https://extractorapi.com/api/v1/table-extractor";
+            var params = "apikey=YOUR_API_KEY&url=example.com&index=0"
+
+            Http.open("GET", endpoint+"?"+params);
+            Http.send();
+
+            Http.onreadystatechange = (e) => {
+              console.log(Http.responseText)
+            }
+        - lang: HTML
+          label: HTTPie
+          source: |
+            http GET "https://extractorapi.com/api/v1/table-extractor?apikey=YOUR_API_KEY&url=example.com"
+      parameters:
+        - name: apikey
+          in: query
+          description: Your account's API key.
+          required: true
+          schema:
+            type: string
+            example: 90c972dba7fz32c3degp478bd328764ab200123
+        - name: url
+          in: query
+          description: The target URL you want to extract text from. Adding protocols is optional (ex. "http://") - these will be added automatically if they are not provided. Try to avoid query parameters in your target URL as these may interfere with your actual parameters.
+          required: true
+          schema:
+            type: string
+            example: example.com
+        - name: index
+          in: query
+          description: Index of table you want to extract. It starts from 0 and default value is 0. 
+          required: false
+          schema:
+            type: integer
+            example: 0
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: string
+                example:
+                    [
+                      Author Candidate I,
+                      Author Candidate II
+                    ]
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    description: Your target URL
+                  status:
+                    type: string
+                    description: The status of the request, in this case `ERROR`
+                  details:
+                    type: string
+                    description: The reason for the Bad Request error
+                example:
+                    url: http://example.com
+                    status: ERROR
+                    details: There was an error connecting to the URL
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: Description of the authorization error
+                example:
+                    detail: Please check that you entered your API key correctly
+
 
   /jobs:
     get:
