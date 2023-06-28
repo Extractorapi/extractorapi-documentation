@@ -409,8 +409,43 @@ paths:
             application/json:
               schema:
                 type: array
-                items:
-                  type: array
+                properties:
+                  url:
+                    type: string
+                    description: Your target URL
+                  status:
+                    type: string
+                    description: The status of the request, in this case `COMPLETE`
+                  domain:
+                    type: string
+                    description: The domain of your target URL
+                  title:
+                    type: string
+                    description: The title of the URL page
+                  author:
+                    type: array
+                    description: The author candidates
+                    items:
+                      type: string
+                  date_published:
+                    type: string
+                    description: Date the content was published
+                  images:
+                    type: array
+                    description: List of images on the page
+                    items:
+                      type: string
+                  videos:
+                    type: array
+                    description: List of videos on the page
+                    items:
+                      type: string
+                  text:
+                    type: string
+                    description: The extracted, boilerplate-free text
+                  html:
+                    type: html
+                    description: The page's HTML
                 example:
                     url: "http://example.com"
                     status: COMPLETE
