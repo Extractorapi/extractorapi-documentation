@@ -31,8 +31,8 @@ info:
   version: 1.0.4
 
 servers:
-  - url: https://extractorapi.com/api/v1
-    description: Extractor API base URL
+- url: https://extractorapi.com/api/v1
+  description: Extractor API base URL
 
 components:
   securitySchemes:
@@ -56,111 +56,111 @@ components:
                 type: string
                 description: Description of the authorization error
             example:
-                detail: Invalid token.
+              detail: Invalid token.
 
 paths:
   /extractor:
     get:
       security:
-        - APIKeyParam: []
+      - APIKeyParam: []
       summary: Extractor
       description: Given a target URL, this endpoint returns extracted text and other useful data. Protocols ("http://" or "https://") for the `url` parameter are optional, as the API will automatically add "http://" if it doesn't detect one. Also note that sometimes (but not always), parameters within your target URL will give you issues, so it's best to remove them.
       x-code-samples:
-        - lang: Python
-          source: |
-            import requests
+      - lang: Python
+        source: |
+          import requests
 
-            endpoint = "https://extractorapi.com/api/v1/extractor"
-            params = {
-              "apikey": "YOUR_API_KEY",
-              "url": "example.com"
-            }
+          endpoint = "https://extractorapi.com/api/v1/extractor"
+          params = {
+            "apikey": "YOUR_API_KEY",
+            "url": "example.com"
+          }
 
-            r = requests.get(endpoint, params=params)
-            print(r.json())
-        - lang: JavaScript
-          source: |
-            var Http = new XMLHttpRequest();
-            var endpoint = "https://extractorapi.com/api/v1/extractor";
-            var params = "apikey=YOUR_API_KEY&url=example.com"
+          r = requests.get(endpoint, params=params)
+          print(r.json())
+      - lang: JavaScript
+        source: |
+          var Http = new XMLHttpRequest();
+          var endpoint = "https://extractorapi.com/api/v1/extractor";
+          var params = "apikey=YOUR_API_KEY&url=example.com"
 
-            Http.open("GET", endpoint+"?"+params);
-            Http.send();
+          Http.open("GET", endpoint+"?"+params);
+          Http.send();
 
-            Http.onreadystatechange = (e) => {
-              console.log(Http.responseText)
-            }
-        - lang: HTML
-          label: HTTPie
-          source: |
-            http GET "https://extractorapi.com/api/v1/extractor?apikey=YOUR_API_KEY&url=example.com"
+          Http.onreadystatechange = (e) => {
+            console.log(Http.responseText)
+          }
+      - lang: HTML
+        label: HTTPie
+        source: |
+          http GET "https://extractorapi.com/api/v1/extractor?apikey=YOUR_API_KEY&url=example.com"
       parameters:
-        - name: apikey
-          in: query
-          description: Your account's API key.
-          required: true
-          schema:
-            type: string
-            example: 90c972dba7fz32c3degp478bd328764ab200123
-        - name: url
-          in: query
-          description: The target URL you want to extract text from. Adding protocols is optional (ex. "http://") - these will be added automatically if they are not provided. Try to avoid query parameters in your target URL as these may interfere with your actual parameters.
-          required: true
-          schema:
-            type: string
-            example: example.com
-        - name: js
-          in: query
-          description: Enable JavaScript rendering. Uses 5 requests instead of the standard 1 request. Available only in paid plans.
-          required: false
-          schema:
-            type: string
-            example: true
-        - name: wait
-          in: query
-          description: Used alongside the **js** parameter. Waits that many seconds before retrieving text content. Available only in paid plans.
-          required: false
-          schema:
-            type: int
-            example: 3
-        - name: translate_from
-          in: query
-          description: Indicates the `text` output language you want to translate from. If you want to translate an extracted English article into French, `translate_from` would be `translate_from=en`. See the list of [language codes here](/getting-started#translate). Available only in paid plans.
-          required: false
-          schema:
-            type: string
-            example: en
-        - name: translate_to
-          in: query
-          description: Indicates the language you want to translate your `text` output to. If you want to translate an extracted English article into French, `translate_to` would be `translate_to=fr`. See the list of [language codes here](/getting-started#translate). Available only in paid plans.
-          required: false
-          schema:
-            type: string
-            example: fr
-        - name: fields
-          in: query
-          description: |
-            An optional string of comma-seperated fields you want to display in the response. The **fields** parameter will always return the `url`, `status` and `text`, so there's no need to include them. If you don't include **fields**, your response will include all fields except for `raw_text`, `translated_title`, `translated_text` and `clean_html`.
+      - name: apikey
+        in: query
+        description: Your account's API key.
+        required: true
+        schema:
+          type: string
+          example: 90c972dba7fz32c3degp478bd328764ab200123
+      - name: url
+        in: query
+        description: The target URL you want to extract text from. Adding protocols is optional (ex. "http://") - these will be added automatically if they are not provided. Try to avoid query parameters in your target URL as these may interfere with your actual parameters.
+        required: true
+        schema:
+          type: string
+          example: example.com
+      - name: js
+        in: query
+        description: Enable JavaScript rendering. Uses 5 requests instead of the standard 1 request. Available only in paid plans.
+        required: false
+        schema:
+          type: string
+          example: true
+      - name: wait
+        in: query
+        description: Used alongside the **js** parameter. Waits that many seconds before retrieving text content. Available only in paid plans.
+        required: false
+        schema:
+          type: int
+          example: 3
+      - name: translate_from
+        in: query
+        description: Indicates the `text` output language you want to translate from. If you want to translate an extracted English article into French, `translate_from` would be `translate_from=en`. See the list of [language codes here](/getting-started#translate). Available only in paid plans.
+        required: false
+        schema:
+          type: string
+          example: en
+      - name: translate_to
+        in: query
+        description: Indicates the language you want to translate your `text` output to. If you want to translate an extracted English article into French, `translate_to` would be `translate_to=fr`. See the list of [language codes here](/getting-started#translate). Available only in paid plans.
+        required: false
+        schema:
+          type: string
+          example: fr
+      - name: fields
+        in: query
+        description: |
+          An optional string of comma-seperated fields you want to display in the response. The **fields** parameter will always return the `url`, `status` and `text`, so there's no need to include them. If you don't include **fields**, your response will include all fields except for `raw_text`, `translated_title`, `translated_text` and `clean_html`.
 
-            Allowed comma-seperated `fields`:
+          Allowed comma-seperated `fields`:
 
-            * `domain`: The domain of your target URL
-            * `title`: The title of the URL page
-            * `author`: The author candidates
-            * `date_published`: Date the content was published
-            * `images`: List of images on the page
-            * `videos`: List of videos on the page
-            * `html`: The HTML of the response
-            * `raw_text`: Page text, including boilerplate
-            * `translated_title`: Translation of `title` output, requires `translate_from` and `translate_to` parameters
-            * `translated_text`: Translation of `text` output, requires `translate_from` and `translate_to` parameters
-            * `clean_html`: Sanitized HTML, constructed from extracted text
+          * `domain`: The domain of your target URL
+          * `title`: The title of the URL page
+          * `author`: The author candidates
+          * `date_published`: Date the content was published
+          * `images`: List of images on the page
+          * `videos`: List of videos on the page
+          * `html`: The HTML of the response
+          * `raw_text`: Page text, including boilerplate
+          * `translated_title`: Translation of `title` output, requires `translate_from` and `translate_to` parameters
+          * `translated_text`: Translation of `text` output, requires `translate_from` and `translate_to` parameters
+          * `clean_html`: Sanitized HTML, constructed from extracted text
 
-          required: false
-          schema:
-            type: string
-            example:
-              - images,translated_text
+        required: false
+        schema:
+          type: string
+          example:
+          - images,translated_text
       responses:
         200:
           description: OK
@@ -206,25 +206,16 @@ paths:
                     type: html
                     description: The page's HTML
                 example:
-                    url: "http://example.com"
-                    status: COMPLETE
-                    domain: "example.com"
-                    title: Example Article Title
-                    author: [
-                      Author Candidate I,
-                      Author Candidate II
-                    ]
-                    date_published: "2030-01-01T08:40:51.620Z"
-                    images: [
-                      "example.com/image_1.png",
-                      "example.com/image_2.png"
-                    ]
-                    videos: [
-                      "https://www.youtube.com/watch?v=3XAMPL3",
-                      "https://vimeo.com/42424242"
-                    ]
-                    text: Clean article text.
-                    html: "<html><body>Clean article text.</body></html>"
+                  url: "http://example.com"
+                  status: COMPLETE
+                  domain: "example.com"
+                  title: Example Article Title
+                  author: [Author Candidate I, Author Candidate II]
+                  date_published: "2030-01-01T08:40:51.620Z"
+                  images: ["example.com/image_1.png", "example.com/image_2.png"]
+                  videos: ["https://www.youtube.com/watch?v=3XAMPL3", "https://vimeo.com/42424242"]
+                  text: Clean article text.
+                  html: "<html><body>Clean article text.</body></html>"
         400:
           description: Bad Request
           content:
@@ -242,9 +233,9 @@ paths:
                     type: string
                     description: The reason for the Bad Request error
                 example:
-                    url: http://example.com
-                    status: ERROR
-                    details: There was an error connecting to the URL
+                  url: http://example.com
+                  status: ERROR
+                  details: There was an error connecting to the URL
         403:
           description: Forbidden
           content:
@@ -256,65 +247,65 @@ paths:
                     type: string
                     description: Description of the authorization error
                 example:
-                    detail: Please check that you entered your API key correctly
+                  detail: Please check that you entered your API key correctly
 
   /search:
     get:
       security:
-        - APIKeyParam: []
+      - APIKeyParam: []
       summary: News Search
       description: Given a search term, this endpoint returns a list of up to 100 relevant news items. You can optionally add a language-country code to narrow down results.
       x-code-samples:
-        - lang: Python
-          source: |
-            import requests
+      - lang: Python
+        source: |
+          import requests
 
-            endpoint = "https://extractorapi.com/api/v1/search"
-            params = {
-              "apikey": "YOUR_API_KEY",
-              "search_term": "example"
-            }
+          endpoint = "https://extractorapi.com/api/v1/search"
+          params = {
+            "apikey": "YOUR_API_KEY",
+            "search_term": "example"
+          }
 
-            r = requests.get(endpoint, params=params)
-            print(r.json())
-        - lang: JavaScript
-          source: |
-            var Http = new XMLHttpRequest();
-            var endpoint = "https://extractorapi.com/api/v1/search";
-            var params = "apikey=YOUR_API_KEY&search_term=example"
+          r = requests.get(endpoint, params=params)
+          print(r.json())
+      - lang: JavaScript
+        source: |
+          var Http = new XMLHttpRequest();
+          var endpoint = "https://extractorapi.com/api/v1/search";
+          var params = "apikey=YOUR_API_KEY&search_term=example"
 
-            Http.open("GET", endpoint+"?"+params);
-            Http.send();
+          Http.open("GET", endpoint+"?"+params);
+          Http.send();
 
-            Http.onreadystatechange = (e) => {
-              console.log(Http.responseText)
-            }
-        - lang: HTML
-          label: HTTPie
-          source: |
-            http GET "https://extractorapi.com/api/v1/search?apikey=YOUR_API_KEY&search_term=example"
+          Http.onreadystatechange = (e) => {
+            console.log(Http.responseText)
+          }
+      - lang: HTML
+        label: HTTPie
+        source: |
+          http GET "https://extractorapi.com/api/v1/search?apikey=YOUR_API_KEY&search_term=example"
       parameters:
-        - name: apikey
-          in: query
-          description: Your account's API key.
-          required: true
-          schema:
-            type: string
-            example: 90c972dba7fz32c3degp478bd328764ab200123
-        - name: search_term
-          in: query
-          description: The term you would like to search for. While more than one term (seperated by whitespaces) may work, it's advised to use a single term for best results.
-          required: true
-          schema:
-            type: string
-            example: example
-        - name: location
-          in: query
-          description: A language-country code to narrow down your results. You can find the [list of usable language-country codes here](/getting-started#location).
-          required: false
-          schema:
-            type: string
-            example: en-US
+      - name: apikey
+        in: query
+        description: Your account's API key.
+        required: true
+        schema:
+          type: string
+          example: 90c972dba7fz32c3degp478bd328764ab200123
+      - name: search_term
+        in: query
+        description: The term you would like to search for. While more than one term (seperated by whitespaces) may work, it's advised to use a single term for best results.
+        required: true
+        schema:
+          type: string
+          example: example
+      - name: location
+        in: query
+        description: A language-country code to narrow down your results. You can find the [list of usable language-country codes here](/getting-started#location).
+        required: false
+        schema:
+          type: string
+          example: en-US
       responses:
         200:
           description: OK
@@ -339,69 +330,69 @@ paths:
                     type: string
                     description: The date the news article was published
                 example:
-                    title: Example Title
-                    url: "http://example.com"
-                    summary: "Example article summary."
-                    site_name: Example Site Name
-                    date_published: "2030-01-01T08:40:51.620Z"
-/table-extractor:
+                  title: Example Title
+                  url: "http://example.com"
+                  summary: "Example article summary."
+                  site_name: Example Site Name
+                  date_published: "2030-01-01T08:40:51.620Z"
+  /table-extractor:
     get:
       security:
-        - APIKeyParam: []
+      - APIKeyParam: []
       summary: HTML Table Extractor
       description: Given a target URL, this endpoint returns extracted html table content in array format. Protocols ("http://" or "https://") for the `url` parameter are optional, as the API will automatically add "http://" if it doesn't detect one. Also note that sometimes (but not always), parameters within your target URL will give you issues, so it's best to remove them.
       x-code-samples:
-        - lang: Python
-          source: |
-            import requests
+      - lang: Python
+        source: |
+          import requests
 
-            endpoint = "https://extractorapi.com/api/v1/table-extractor"
-            params = {
-              "apikey": "YOUR_API_KEY",
-              "url": "example.com",
-              "index": 0
-            }
+          endpoint = "https://extractorapi.com/api/v1/table-extractor"
+          params = {
+            "apikey": "YOUR_API_KEY",
+            "url": "example.com",
+            "index": 0
+          }
 
-            r = requests.get(endpoint, params=params)
-            print(r.json())
-        - lang: JavaScript
-          source: |
-            var Http = new XMLHttpRequest();
-            var endpoint = "https://extractorapi.com/api/v1/table-extractor";
-            var params = "apikey=YOUR_API_KEY&url=example.com&index=0"
+          r = requests.get(endpoint, params=params)
+          print(r.json())
+      - lang: JavaScript
+        source: |
+          var Http = new XMLHttpRequest();
+          var endpoint = "https://extractorapi.com/api/v1/table-extractor";
+          var params = "apikey=YOUR_API_KEY&url=example.com&index=0"
 
-            Http.open("GET", endpoint+"?"+params);
-            Http.send();
+          Http.open("GET", endpoint+"?"+params);
+          Http.send();
 
-            Http.onreadystatechange = (e) => {
-              console.log(Http.responseText)
-            }
-        - lang: HTML
-          label: HTTPie
-          source: |
-            http GET "https://extractorapi.com/api/v1/table-extractor?apikey=YOUR_API_KEY&url=example.com"
+          Http.onreadystatechange = (e) => {
+            console.log(Http.responseText)
+          }
+      - lang: HTML
+        label: HTTPie
+        source: |
+          http GET "https://extractorapi.com/api/v1/table-extractor?apikey=YOUR_API_KEY&url=example.com"
       parameters:
-        - name: apikey
-          in: query
-          description: Your account's API key.
-          required: true
-          schema:
-            type: string
-            example: 90c972dba7fz32c3degp478bd328764ab200123
-        - name: url
-          in: query
-          description: The target URL you want to extract text from. Adding protocols is optional (ex. "http://") - these will be added automatically if they are not provided. Try to avoid query parameters in your target URL as these may interfere with your actual parameters.
-          required: true
-          schema:
-            type: string
-            example: example.com
-        - name: index
-          in: query
-          description: Index of table you want to extract. It starts from 0 and default value is 0. 
-          required: false
-          schema:
-            type: integer
-            example: 0
+      - name: apikey
+        in: query
+        description: Your account's API key.
+        required: true
+        schema:
+          type: string
+          example: 90c972dba7fz32c3degp478bd328764ab200123
+      - name: url
+        in: query
+        description: The target URL you want to extract text from. Adding protocols is optional (ex. "http://") - these will be added automatically if they are not provided. Try to avoid query parameters in your target URL as these may interfere with your actual parameters.
+        required: true
+        schema:
+          type: string
+          example: example.com
+      - name: index
+        in: query
+        description: Index of table you want to extract. It starts from 0 and default value is 0.
+        required: false
+        schema:
+          type: integer
+          example: 0
       responses:
         200:
           description: OK
@@ -447,25 +438,16 @@ paths:
                     type: html
                     description: The page's HTML
                 example:
-                    url: "http://example.com"
-                    status: COMPLETE
-                    domain: "example.com"
-                    title: Example Article Title
-                    author: [
-                      Author Candidate I,
-                      Author Candidate II
-                    ]
-                    date_published: "2030-01-01T08:40:51.620Z"
-                    images: [
-                      "example.com/image_1.png",
-                      "example.com/image_2.png"
-                    ]
-                    videos: [
-                      "https://www.youtube.com/watch?v=3XAMPL3",
-                      "https://vimeo.com/42424242"
-                    ]
-                    text: Clean article text.
-                    html: "<html><body>Clean article text.</body></html>"
+                  url: "http://example.com"
+                  status: COMPLETE
+                  domain: "example.com"
+                  title: Example Article Title
+                  author: [Author Candidate I, Author Candidate II]
+                  date_published: "2030-01-01T08:40:51.620Z"
+                  images: ["example.com/image_1.png", "example.com/image_2.png"]
+                  videos: ["https://www.youtube.com/watch?v=3XAMPL3", "https://vimeo.com/42424242"]
+                  text: Clean article text.
+                  html: "<html><body>Clean article text.</body></html>"
         400:
           description: Bad Request
           content:
@@ -483,9 +465,9 @@ paths:
                     type: string
                     description: The reason for the Bad Request error
                 example:
-                    url: http://example.com
-                    status: ERROR
-                    details: There was an error connecting to the URL
+                  url: http://example.com
+                  status: ERROR
+                  details: There was an error connecting to the URL
         403:
           description: Forbidden
           content:
@@ -497,7 +479,7 @@ paths:
                     type: string
                     description: Description of the authorization error
                 example:
-                    detail: Please check that you entered your API key correctly
+                  detail: Please check that you entered your API key correctly
 
 
   /jobs:
@@ -505,52 +487,52 @@ paths:
       summary: List Jobs
       description: List all your current jobs (includes both your pending and complete jobs). Results are paginated, with a maximum of 50 jobs per page.
       security:
-        - Bearer: []
+      - Bearer: []
       x-code-samples:
-        - lang: Python
-          source: |
-            import requests
+      - lang: Python
+        source: |
+          import requests
 
-            endpoint = "https://extractorapi.com/api/v1/jobs"
-            api_key = "YOUR_API_KEY"
-            headers = {
-              "Authorization": f"Bearer {api_key}"
-            }
+          endpoint = "https://extractorapi.com/api/v1/jobs"
+          api_key = "YOUR_API_KEY"
+          headers = {
+            "Authorization": f"Bearer {api_key}"
+          }
 
-            r = requests.get(endpoint, headers=headers)
-            print(r.json())
-        - lang: JavaScript
-          source: |
-            var Http = new XMLHttpRequest();
-            var apiKey = "YOUR_API_KEY"
-            var endpoint = "https://extractorapi.com/api/v1/jobs";
+          r = requests.get(endpoint, headers=headers)
+          print(r.json())
+      - lang: JavaScript
+        source: |
+          var Http = new XMLHttpRequest();
+          var apiKey = "YOUR_API_KEY"
+          var endpoint = "https://extractorapi.com/api/v1/jobs";
 
-            Http.open("GET", endpoint);
-            Http.setRequestHeader(
-               "Content-Type", "application/json"
-            );
-            Http.setRequestHeader(
-               "Authorization", `Bearer ${apiKey}`
-            );
-            Http.send();
+          Http.open("GET", endpoint);
+          Http.setRequestHeader(
+             "Content-Type", "application/json"
+          );
+          Http.setRequestHeader(
+             "Authorization", `Bearer ${apiKey}`
+          );
+          Http.send();
 
-            Http.onreadystatechange = (e) => {
-              console.log(Http.responseText)
-            }
-        - lang: HTML
-          label: HTTPie
-          source: |
-            http GET https://extractorapi.com/api/v1/jobs \
-                     Authorization:"Bearer YOUR_API_KEY"
+          Http.onreadystatechange = (e) => {
+            console.log(Http.responseText)
+          }
+      - lang: HTML
+        label: HTTPie
+        source: |
+          http GET https://extractorapi.com/api/v1/jobs \
+                   Authorization:"Bearer YOUR_API_KEY"
       parameters:
-        - name: job_name__contains
-          in: query
-          description: |
-            Filter the results by the job name. `job_name__contains` looks for an exact match while `job_name__icontains` is case agnostic. The filter parameter should be prepended with `?`. For example, the full URL would look like this: `https://extractorapi.com/api/v1/jobs?job_name__contains=my_job`.
-          required: false
-          schema:
-            type: string
-            example: my_job
+      - name: job_name__contains
+        in: query
+        description: |
+          Filter the results by the job name. `job_name__contains` looks for an exact match while `job_name__icontains` is case agnostic. The filter parameter should be prepended with `?`. For example, the full URL would look like this: `https://extractorapi.com/api/v1/jobs?job_name__contains=my_job`.
+        required: false
+        schema:
+          type: string
+          example: my_job
       responses:
         200:
           description: OK
@@ -588,23 +570,10 @@ paths:
                           type: integer
                           description: The number of URLs in the job
                 example:
-                    count: 2
-                    next: https://extractorapi.com/api/v1/jobs?page=2
-                    previous: null
-                    results: [
-                      {
-                        id: 1,
-                        job_name: myJob1,
-                        process_date: "2030-01-02T08:40:51.620Z",
-                        url_count: 5
-                      },
-                      {
-                        id: 2,
-                        job_name: myJob2,
-                        process_date: "2030-01-03T08:40:51.620Z",
-                        url_count: 10
-                      }
-                    ]
+                  count: 2
+                  next: https://extractorapi.com/api/v1/jobs?page=2
+                  previous: null
+                  results: [{id: 1, job_name: myJob1, process_date: "2030-01-02T08:40:51.620Z", url_count: 5}, {id: 2, job_name: myJob2, process_date: "2030-01-03T08:40:51.620Z", url_count: 10}]
 
         401:
           $ref: "#/components/responses/UnauthorizedError"
@@ -614,60 +583,60 @@ paths:
       description: |
         Create a job and begin extracting text from the provided list of URLs. Jobs will persist on the server, meaning they don't block your workflow. You can periodically check the status of your job via the **Job Status** endpoint, or even head to your [Jobs page](/jobs/) to view the status of the job and download results in .json or .csv formats. **Note that you can add a maximum of 100 URLs to a job at a time - any more, and the list will be cut off at the hundreth URL**.
       security:
-        - Bearer: []
+      - Bearer: []
       x-code-samples:
-        - lang: Python
-          source: |
-            import requests
+      - lang: Python
+        source: |
+          import requests
 
-            api_key = "YOUR_API_KEY"
-            endpoint = "https://extractorapi.com/api/v1/jobs"
+          api_key = "YOUR_API_KEY"
+          endpoint = "https://extractorapi.com/api/v1/jobs"
 
-            headers = {
-                "Authorization": f"Bearer {api_key}"
-            }
-            data = {
-              "job_name": "my_job",
-              "url_list": [
-                  "example.com/article1",
-                  "example.com/article2"
-              ]
-            }
-
-            r = requests.post(endpoint, headers=headers, json=data)
-            print(r.json())
-        - lang: JavaScript
-          source: |
-            var Http = new XMLHttpRequest();
-            var apiKey = "YOUR_API_KEY"
-            var endpoint = "https://extractorapi.com/api/v1/jobs";
-            var data = {
-              "job_name": "myJob",
-              "url_list": [
+          headers = {
+              "Authorization": f"Bearer {api_key}"
+          }
+          data = {
+            "job_name": "my_job",
+            "url_list": [
                 "example.com/article1",
                 "example.com/article2"
-              ]
-            }
+            ]
+          }
 
-            Http.open("POST", endpoint);
-            Http.setRequestHeader(
-               "Content-Type", "application/json"
-            );
-            Http.setRequestHeader(
-               "Authorization", `Bearer ${apiKey}`
-            );
-            Http.send(JSON.stringify(data));
+          r = requests.post(endpoint, headers=headers, json=data)
+          print(r.json())
+      - lang: JavaScript
+        source: |
+          var Http = new XMLHttpRequest();
+          var apiKey = "YOUR_API_KEY"
+          var endpoint = "https://extractorapi.com/api/v1/jobs";
+          var data = {
+            "job_name": "myJob",
+            "url_list": [
+              "example.com/article1",
+              "example.com/article2"
+            ]
+          }
 
-            Http.onreadystatechange = (e) => {
-              console.log(Http.responseText)
-            }
-        - lang: HTML
-          label: HTTPie
-          source: |
-            http POST https://extractorapi.com/api/v1/jobs \
-                      Authorization:"Bearer YOUR_API_KEY" \
-                      job_name=myJob \
-                      url_list:='["example.com/article1", "example.com/acrticle2"]'
+          Http.open("POST", endpoint);
+          Http.setRequestHeader(
+             "Content-Type", "application/json"
+          );
+          Http.setRequestHeader(
+             "Authorization", `Bearer ${apiKey}`
+          );
+          Http.send(JSON.stringify(data));
+
+          Http.onreadystatechange = (e) => {
+            console.log(Http.responseText)
+          }
+      - lang: HTML
+        label: HTTPie
+        source: |
+          http POST https://extractorapi.com/api/v1/jobs \
+                    Authorization:"Bearer YOUR_API_KEY" \
+                    job_name=myJob \
+                    url_list:='["example.com/article1", "example.com/acrticle2"]'
       requestBody:
         required: true
         content:
@@ -686,10 +655,7 @@ paths:
                     description: URL string, with or without the protocol (ex. "http://")
               example:
                 job_name: "myJob"
-                url_list: [
-                  "example.com/article1",
-                  "example.com/article2"
-                ]
+                url_list: ["example.com/article1", "example.com/article2"]
       responses:
         200:
           description: OK
@@ -705,8 +671,8 @@ paths:
                     type: string
                     description: The name you gave your job
                 example:
-                    id: 2
-                    job_name: my_job
+                  id: 2
+                  job_name: my_job
         400:
           description: Bad Request
           content:
@@ -718,7 +684,7 @@ paths:
                     type: string
                     description: The reason for the Bad Request error
                 example:
-                    detail: You already have a job named myJob!
+                  detail: You already have a job named myJob!
         401:
           $ref: "#/components/responses/UnauthorizedError"
 
@@ -727,43 +693,43 @@ paths:
       summary: Job Status
       description: Retrieve a specific job and its completion status, using the job's ID.
       security:
-        - Bearer: []
+      - Bearer: []
       x-code-samples:
-        - lang: Python
-          source: |
-            import requests
+      - lang: Python
+        source: |
+          import requests
 
-            endpoint = "https://extractorapi.com/api/v1/jobs/1"
-            api_key = "YOUR_API_KEY"
-            headers = {
-              "Authorization": f"Bearer {api_key}"
-            }
+          endpoint = "https://extractorapi.com/api/v1/jobs/1"
+          api_key = "YOUR_API_KEY"
+          headers = {
+            "Authorization": f"Bearer {api_key}"
+          }
 
-            r = requests.get(endpoint, headers=headers)
-            print(r.json())
-        - lang: JavaScript
-          source: |
-            var Http = new XMLHttpRequest();
-            var apiKey = "YOUR_API_KEY"
-            var endpoint = "https://extractorapi.com/api/v1/jobs/1";
+          r = requests.get(endpoint, headers=headers)
+          print(r.json())
+      - lang: JavaScript
+        source: |
+          var Http = new XMLHttpRequest();
+          var apiKey = "YOUR_API_KEY"
+          var endpoint = "https://extractorapi.com/api/v1/jobs/1";
 
-            Http.open("GET", endpoint);
-            Http.setRequestHeader(
-               "Content-Type", "application/json"
-            );
-            Http.setRequestHeader(
-               "Authorization", `Bearer ${apiKey}`
-            );
-            Http.send();
+          Http.open("GET", endpoint);
+          Http.setRequestHeader(
+             "Content-Type", "application/json"
+          );
+          Http.setRequestHeader(
+             "Authorization", `Bearer ${apiKey}`
+          );
+          Http.send();
 
-            Http.onreadystatechange = (e) => {
-              console.log(Http.responseText)
-            }
-        - lang: HTML
-          label: HTTPie
-          source: |
-            http GET https://extractorapi.com/api/v1/jobs/1 \
-                     Authorization:"Bearer YOUR_API_KEY"
+          Http.onreadystatechange = (e) => {
+            console.log(Http.responseText)
+          }
+      - lang: HTML
+        label: HTTPie
+        source: |
+          http GET https://extractorapi.com/api/v1/jobs/1 \
+                   Authorization:"Bearer YOUR_API_KEY"
       responses:
         200:
           description: OK
@@ -806,17 +772,10 @@ paths:
                 example:
                   id: 1
                   job_name: my_job
-                  job_status: {
-                    errors: 0,
-                    percent_complete: 100,
-                    urls_processed: 2
-                  }
+                  job_status: {errors: 0, percent_complete: 100, urls_processed: 2}
                   process_date: "2030-01-02T08:40:51.620Z"
                   url_count: 2
-                  urls: [
-                    "http://example.com/article1",
-                    "http://example.com/article2"
-                  ]
+                  urls: ["http://example.com/article1", "http://example.com/article2"]
         401:
           $ref: "#/components/responses/UnauthorizedError"
 
@@ -825,60 +784,60 @@ paths:
       summary: Job URLs
       description: A job's paginated list of URLs, including the extracted text and details. By default, only 10 URL objects are displayed per page.
       security:
-        - Bearer: []
+      - Bearer: []
       x-code-samples:
-        - lang: Python
-          source: |
-            import requests
+      - lang: Python
+        source: |
+          import requests
 
-            endpoint = "https://extractorapi.com/api/v1/jobs/1/urls"
-            api_key = "YOUR_API_KEY"
-            headers = {
-              "Authorization": f"Bearer {api_key}"
-            }
+          endpoint = "https://extractorapi.com/api/v1/jobs/1/urls"
+          api_key = "YOUR_API_KEY"
+          headers = {
+            "Authorization": f"Bearer {api_key}"
+          }
 
-            r = requests.get(endpoint, headers=headers)
-            print(r.json())
-        - lang: JavaScript
-          source: |
-            var Http = new XMLHttpRequest();
-            var apiKey = "YOUR_API_KEY"
-            var endpoint = "https://extractorapi.com/api/v1/jobs/1/urls";
+          r = requests.get(endpoint, headers=headers)
+          print(r.json())
+      - lang: JavaScript
+        source: |
+          var Http = new XMLHttpRequest();
+          var apiKey = "YOUR_API_KEY"
+          var endpoint = "https://extractorapi.com/api/v1/jobs/1/urls";
 
-            Http.open("GET", endpoint);
-            Http.setRequestHeader(
-               "Content-Type", "application/json"
-            );
-            Http.setRequestHeader(
-               "Authorization", `Bearer ${apiKey}`
-            );
-            Http.send();
+          Http.open("GET", endpoint);
+          Http.setRequestHeader(
+             "Content-Type", "application/json"
+          );
+          Http.setRequestHeader(
+             "Authorization", `Bearer ${apiKey}`
+          );
+          Http.send();
 
-            Http.onreadystatechange = (e) => {
-              console.log(Http.responseText)
-            }
-        - lang: HTML
-          label: HTTPie
-          source: |
-            http GET https://extractorapi.com/api/v1/jobs/1/urls \
-                     Authorization:"Bearer YOUR_API_KEY"
+          Http.onreadystatechange = (e) => {
+            console.log(Http.responseText)
+          }
+      - lang: HTML
+        label: HTTPie
+        source: |
+          http GET https://extractorapi.com/api/v1/jobs/1/urls \
+                   Authorization:"Bearer YOUR_API_KEY"
       parameters:
-        - name: title__contains
-          in: query
-          description: |
-            Filter the results by a keyword in the URL page title. `title__contains` looks for an exact match while `title__icontains` is case agnostic. The filter parameter should be prepended with `?`. For example, the full URL would look like this: `https://extractorapi.com/api/v1/jobs/1/urls?title__contains=Facebook`.
-          required: false
-          schema:
-            type: string
-            example: facebook
-        - name: text__contains
-          in: query
-          description: |
-            Filter the results by a keyword in the cleaned text of the URL. `text__contains` looks for an exact match while `text__icontains` is case agnostic. The filter parameter should be prepended with `?`. For example, the full URL would look like this: `https://extractorapi.com/api/v1/jobs/1/urls?text__icontains=acquisition`.
-          required: false
-          schema:
-            type: string
-            example: acquisition
+      - name: title__contains
+        in: query
+        description: |
+          Filter the results by a keyword in the URL page title. `title__contains` looks for an exact match while `title__icontains` is case agnostic. The filter parameter should be prepended with `?`. For example, the full URL would look like this: `https://extractorapi.com/api/v1/jobs/1/urls?title__contains=Facebook`.
+        required: false
+        schema:
+          type: string
+          example: facebook
+      - name: text__contains
+        in: query
+        description: |
+          Filter the results by a keyword in the cleaned text of the URL. `text__contains` looks for an exact match while `text__icontains` is case agnostic. The filter parameter should be prepended with `?`. For example, the full URL would look like this: `https://extractorapi.com/api/v1/jobs/1/urls?text__icontains=acquisition`.
+        required: false
+        schema:
+          type: string
+          example: acquisition
       responses:
         200:
           description: OK
@@ -943,50 +902,7 @@ paths:
                   count: 2
                   next: https://extractorapi.com/api/v1/jobs/1/urls?page=2
                   previous: null
-                  results: [
-                    {
-                      url: "http://example.com/article1",
-                      id: 5,
-                      status: COMPLETE,
-                      domain: "example.com",
-                      title: Example Article Title 1,
-                      author: [
-                        Author Candidate I,
-                        Author Candidate II
-                      ],
-                      date_published: "2030-01-01T08:40:51.620Z",
-                      images: [
-                        "example.com/image.png",
-                      ],
-                      videos: [
-                        "https://www.youtube.com/watch?v=1337HX0R",
-                        "https://vimeo.com/12345678"
-                      ],
-                      text: Clean article text.
-                    },
-                    {
-                      url: "http://example.com/article2",
-                      id: 6,
-                      status: COMPLETE,
-                      domain: example.com,
-                      title: Example Article Title 2,
-                      author: [
-                        Author Candidate I,
-                        Author Candidate II,
-                        Author Candidate III
-                      ],
-                      date_published: "2030-01-02T08:40:51.620Z",
-                      images: [
-                        "example.com/image_1.png",
-                        "example.com/image_2.png"
-                      ],
-                      videos: [
-                        "https://www.youtube.com/watch?v=3XAMPL3",
-                        "https://vimeo.com/42424242"
-                      ],
-                      text: Clean article text.
-                    }
-                  ]
+                  results: [{url: "http://example.com/article1", id: 5, status: COMPLETE, domain: "example.com", title: Example Article Title 1, author: [Author Candidate I, Author Candidate II], date_published: "2030-01-01T08:40:51.620Z", images: ["example.com/image.png"], videos: ["https://www.youtube.com/watch?v=1337HX0R", "https://vimeo.com/12345678"], text: Clean article text.}, {url: "http://example.com/article2", id: 6, status: COMPLETE, domain: example.com, title: Example Article Title 2, author: [Author Candidate I, Author Candidate II, Author Candidate III], date_published: "2030-01-02T08:40:51.620Z", images: ["example.com/image_1.png", "example.com/image_2.png"], videos: ["https://www.youtube.com/watch?v=3XAMPL3", "https://vimeo.com/42424242"], text: Clean article text.}]
         401:
           $ref: "#/components/responses/UnauthorizedError"
 
@@ -996,43 +912,43 @@ paths:
       description: |
         Retrieve a single URL and its extracted text and details from a particular job. This endpoint include two additional fields you won't get in the **Job URLs** endpoint: `html` and `raw_text`.
       security:
-        - Bearer: []
+      - Bearer: []
       x-code-samples:
-        - lang: Python
-          source: |
-            import requests
+      - lang: Python
+        source: |
+          import requests
 
-            endpoint = "https://extractorapi.com/api/v1/jobs/1/urls/6"
-            api_key = "YOUR_API_KEY"
-            headers = {
-              "Authorization": f"Bearer {api_key}"
-            }
+          endpoint = "https://extractorapi.com/api/v1/jobs/1/urls/6"
+          api_key = "YOUR_API_KEY"
+          headers = {
+            "Authorization": f"Bearer {api_key}"
+          }
 
-            r = requests.get(endpoint, headers=headers)
-            print(r.json())
-        - lang: JavaScript
-          source: |
-            var Http = new XMLHttpRequest();
-            var apiKey = "YOUR_API_KEY"
-            var endpoint = "https://extractorapi.com/api/v1/jobs/1/urls/6";
+          r = requests.get(endpoint, headers=headers)
+          print(r.json())
+      - lang: JavaScript
+        source: |
+          var Http = new XMLHttpRequest();
+          var apiKey = "YOUR_API_KEY"
+          var endpoint = "https://extractorapi.com/api/v1/jobs/1/urls/6";
 
-            Http.open("GET", endpoint);
-            Http.setRequestHeader(
-               "Content-Type", "application/json"
-            );
-            Http.setRequestHeader(
-               "Authorization", `Bearer ${apiKey}`
-            );
-            Http.send();
+          Http.open("GET", endpoint);
+          Http.setRequestHeader(
+             "Content-Type", "application/json"
+          );
+          Http.setRequestHeader(
+             "Authorization", `Bearer ${apiKey}`
+          );
+          Http.send();
 
-            Http.onreadystatechange = (e) => {
-              console.log(Http.responseText)
-            }
-        - lang: HTML
-          label: HTTPie
-          source: |
-            http GET https://extractorapi.com/api/v1/jobs/1/urls/6 \
-                     Authorization:"Bearer YOUR_API_KEY"
+          Http.onreadystatechange = (e) => {
+            console.log(Http.responseText)
+          }
+      - lang: HTML
+        label: HTTPie
+        source: |
+          http GET https://extractorapi.com/api/v1/jobs/1/urls/6 \
+                   Authorization:"Bearer YOUR_API_KEY"
       responses:
         200:
           description: OK
@@ -1089,19 +1005,10 @@ paths:
                   status: COMPLETE
                   domain: "example.com"
                   title: Example Article Title
-                  author: [
-                    Author Candidate I,
-                    Author Candidate II
-                  ]
+                  author: [Author Candidate I, Author Candidate II]
                   date_published: "2030-01-01T08:40:51.620Z"
-                  images: [
-                    "example.com/image_1.png",
-                    "example.com/image_2.png"
-                  ]
-                  videos: [
-                    "https://www.youtube.com/watch?v=3XAMPL3",
-                    "https://vimeo.com/42424242"
-                  ]
+                  images: ["example.com/image_1.png", "example.com/image_2.png"]
+                  videos: ["https://www.youtube.com/watch?v=3XAMPL3", "https://vimeo.com/42424242"]
                   text: Clean article text.
                   html: "<!DOCTYPE html><html lang='en'>...</html>"
                   raw_text: "ADVERTISEMENT. Rest of article text. Sign Up!"
