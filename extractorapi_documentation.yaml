@@ -403,7 +403,7 @@ paths:
                 properties:
                   data:
                     type: array
-                    description: table content including header and body
+                    description: Table content including header and body. Each array item contains one row in the table.
                     items:
                       type: array
                       description: Each row in the table. The first row would be the header of table
