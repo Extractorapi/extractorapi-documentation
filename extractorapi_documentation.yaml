@@ -349,7 +349,7 @@ paths:
           endpoint = "https://extractorapi.com/api/v1/table-extractor"
           params = {
             "apikey": "YOUR_API_KEY",
-            "url": "example.com",
+            "url": "en.wikipedia.org/wiki/Forbes_list_of_the_world%27s_highest-paid_athletes",
             "index": 0
           }
 
@@ -359,7 +359,7 @@ paths:
         source: |
           var Http = new XMLHttpRequest();
           var endpoint = "https://extractorapi.com/api/v1/table-extractor";
-          var params = "apikey=YOUR_API_KEY&url=example.com&index=0"
+          var params = "apikey=YOUR_API_KEY&url=en.wikipedia.org/wiki/Forbes_list_of_the_world%27s_highest-paid_athletes&index=0"
 
           Http.open("GET", endpoint+"?"+params);
           Http.send();
@@ -370,7 +370,7 @@ paths:
       - lang: HTML
         label: HTTPie
         source: |
-          http GET "https://extractorapi.com/api/v1/table-extractor?apikey=YOUR_API_KEY&url=example.com&index=0"
+          http GET "https://extractorapi.com/api/v1/table-extractor?apikey=YOUR_API_KEY&url=en.wikipedia.org/wiki/Forbes_list_of_the_world%27s_highest-paid_athletes&index=0"
       parameters:
       - name: apikey
         in: query
@@ -385,7 +385,7 @@ paths:
         required: true
         schema:
           type: string
-          example: example.com
+          example: en.wikipedia.org/wiki/Forbes_list_of_the_world%27s_highest-paid_athletes
       - name: index
         in: query
         description: Index of table you want to extract. It starts from 0 and default value is 0.
@@ -428,7 +428,7 @@ paths:
                     type: string
                     description: The reason for the Bad Request error
                 example:
-                  url: http://example.com
+                  url: http://en.wikipedia.org/wiki/Forbes_list_of_the_world%27s_highest-paid_athletes
                   status: ERROR
                   details: There was an error connecting to the URL
         403:
