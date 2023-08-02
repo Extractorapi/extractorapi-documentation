@@ -506,12 +506,12 @@ paths:
             application/json:
               schema:
                 type: array
-                  description: All the texts in PDF.
+                description: All the texts in PDF.
+                items:
+                  type: array
+                  description: Text in one page
                   items:
-                    type: array
-                    description: Text in one page
-                    items:
-                      type: string
+                    type: string
                 example:
                   data: ["Home Health  | 02 August 2021     3 \n  \nExhibit 3: Continuum of Care  \nHome care setting are lowest cost...", "MedPAC, Company presentations, Company filings.  \nBofA GLOBAL R ESEAR CH  \nHome care growing in the mid to high single digits  \nDriven by the aging demographics and the continued shift..."]
         200:
