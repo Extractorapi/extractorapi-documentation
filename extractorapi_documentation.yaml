@@ -335,6 +335,7 @@ paths:
                   summary: "Example article summary."
                   site_name: Example Site Name
                   date_published: "2030-01-01T08:40:51.620Z"
+
   /table-extractor:
     get:
       security:
@@ -452,6 +453,105 @@ paths:
                     description: Description of the authorization error
                 example:
                   detail: Please check that you entered your API key correctly
+
+  /pdf-extractor:
+    post:
+      security:
+      - APIKeyParam: []
+      summary: PDF Extractor
+      description: Given a PDF file, this endpoint returns extracted text in string or array format.
+      x-code-samples:
+      - lang: Python
+        source: |
+          import requests
+
+          endpoint = "https://extractorapi.com/api/v1/pdf-extractor?apikey=YOUR_API_KEY&page_num=0"
+
+          r = requests.post(endpoint, files=dict(file="REAL FILE TO EXTRACT"))
+          print(r)
+      - lang: JavaScript
+        source: |
+          var Http = new XMLHttpRequest();
+          var endpoint = "https://extractorapi.com/api/v1/pdf-extractor";
+          var params = "apikey=YOUR_API_KEY&page_num=0"
+          var formData = new FormData();
+          formData.append("file", document.getElementById("myFileField").files[0]);
+
+          Http.open("POST", endpoint+"?"+params);
+          Http.send(formData);
+
+          Http.onreadystatechange = (e) => {
+            console.log(Http.responseText)
+          }
+      parameters:
+      - name: apikey
+        in: query
+        description: Your account's API key.
+        required: true
+        schema:
+          type: string
+          example: 90c972dba7fz32c3degp478bd328764ab200123
+      - name: page_num
+        in: query
+        description: Page number in the pdf to extract. It starts from 0 and default value is 0. If page_num is not set, it'll return all the texts in pdf as array format, containing one page in one array item. If set, it'll return all texts in one page, as string.
+        required: false
+        schema:
+          type: integer
+          example: 0
+
+      responses:
+        200:
+          description: OK and when page_num is not specified.
+          content:
+            application/json:
+              schema:
+                type: array
+                  description: All the texts in PDF.
+                  items:
+                    type: array
+                    description: Text in one page
+                    items:
+                      type: string
+                example:
+                  data: ["Home Health  | 02 August 2021     3 \n  \nExhibit 3: Continuum of Care  \nHome care setting are lowest cost...", "MedPAC, Company presentations, Company filings.  \nBofA GLOBAL R ESEAR CH  \nHome care growing in the mid to high single digits  \nDriven by the aging demographics and the continued shift..."]
+        200:
+          description: OK and when page_num is specified.
+          content:
+            application/json:
+              schema:
+                type: string
+                description: Text in one page
+                example:
+                  data: "Home Health  | 02 August 2021     3 \n  \nExhibit 3: Continuum of Care  \nHome care setting are lowest cost...."
+        400:
+          description: Bad Request. Invalid File
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: The status of the request, in this case `ERROR`
+                  details:
+                    type: string
+                    description: The reason for the Bad Request error
+                example:
+                  status: ERROR
+                  details: The given PDF is empty.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    description: Description of the authorization error
+                example:
+                  detail: Please check that you entered your API key correctly
+
 
 
   /jobs:
