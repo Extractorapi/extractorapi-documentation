@@ -510,8 +510,6 @@ paths:
                 items:
                   type: string
                   description: Text in one page
-                example:
-                  data: ["Home Health  | 02 August 2021     3 \n  \nExhibit 3: Continuum of Care  \nHome care setting are lowest cost...", "MedPAC, Company presentations, Company filings.  \nBofA GLOBAL R ESEAR CH  \nHome care growing in the mid to high single digits  \nDriven by the aging demographics and the continued shift..."]
         200:
           description: OK and when page_num is specified.
           content:
